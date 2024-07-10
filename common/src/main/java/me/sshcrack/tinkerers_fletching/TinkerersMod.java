@@ -2,7 +2,7 @@ package me.sshcrack.tinkerers_fletching;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
-import dev.architectury.platform.Platform;
+import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.registry.registries.RegistrySupplier;
@@ -12,8 +12,6 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.stat.StatFormatter;
-import net.minecraft.stat.Stats;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +19,7 @@ import org.slf4j.LoggerFactory;
 public final class TinkerersMod {
     public static final String MOD_ID = "tinkerers_fletching";
 
-    private static final Supplier<RegistrarManager> MANAGER = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
+public static final Supplier<RegistrarManager> MANAGER = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
 
     public static final RegistrySupplier<ScreenHandlerType<FletchingScreenHandler>> FLETCHING_SCREEN_HANDLER = registerScreenHandler("fletching", FletchingScreenHandler::new);
 
@@ -35,18 +33,21 @@ public final class TinkerersMod {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static void init() {
+        TinkerersMod.LOGGER.info("Initializing common...");
         Recipes.register();
         TinkerersStats.register();
-        if (!Platform.isForgeLike())
-            setup();
+        TinkerersItems.register();
+        TinkerersEntities.register();
     }
 
     public static void setup() {
+        TinkerersMod.LOGGER.info("Running setup...");
         TinkerersStats.setupEvent();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static <T extends ScreenHandler> RegistrySupplier<ScreenHandlerType<T>> registerScreenHandler(String id, ScreenHandlerType.Factory<T> factory) {
-        return register(RegistryKeys.SCREEN_HANDLER, Identifier.of(MOD_ID, id), new ScreenHandlerType<>(factory, FeatureFlags.VANILLA_FEATURES));
+        return register(RegistryKeys.SCREEN_HANDLER, Identifier.of(MOD_ID, id), MenuRegistry.ofExtended((i, inventory, buf) -> factory.create(i, inventory)));
     }
 
 

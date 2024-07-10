@@ -1,5 +1,6 @@
 package me.sshcrack.tinkerers_fletching.mixin;
 
+import dev.architectury.registry.menu.ExtendedMenuProvider;
 import dev.architectury.registry.menu.MenuRegistry;
 import me.sshcrack.tinkerers_fletching.FletchingScreenHandler;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
@@ -8,6 +9,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.FletchingTableBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
@@ -35,7 +37,12 @@ public class FletchingTableBlockMixin {
         if (world.isClient) {
             cir.setReturnValue(ActionResult.SUCCESS);
         } else {
-            MenuRegistry.openMenu((ServerPlayerEntity) player, new NamedScreenHandlerFactory() {
+            MenuRegistry.openExtendedMenu((ServerPlayerEntity) player, new ExtendedMenuProvider() {
+                @Override
+                public void saveExtraData(PacketByteBuf buf) {
+
+                }
+
                 @Override
                 public Text getDisplayName() {
                     return SCREEN_TITLE;

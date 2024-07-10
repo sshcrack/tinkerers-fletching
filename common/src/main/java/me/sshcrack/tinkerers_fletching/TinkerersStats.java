@@ -1,6 +1,10 @@
 package me.sshcrack.tinkerers_fletching;
 
 import com.google.common.base.Supplier;
+import dev.architectury.platform.Platform;
+import dev.architectury.registry.registries.RegistrySupplier;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.stat.Stats;
@@ -19,9 +23,17 @@ public class TinkerersStats {
         AtomicReference<Identifier> ref = new AtomicReference<>();
 
 
-        var res = TinkerersMod.register(RegistryKeys.CUSTOM_STAT, Identifier.of(id), (Supplier<Identifier>) ref::get);
-        ref.set(res.getId());
-        addStats.add(() -> Stats.CUSTOM.getOrCreateStat(res.getId(), formatter));
+        Supplier<Identifier> res = null;
+        if (Platform.isFabric()) {
+            res = () -> Registry.register(Registries.CUSTOM_STAT, id, Identifier.of(TinkerersMod.MOD_ID, id));
+        } else {
+            var tmp = TinkerersMod.register(RegistryKeys.CUSTOM_STAT, Identifier.of(id), (Supplier<Identifier>) ref::get);
+            res = tmp::getId;
+        }
+
+        ref.set(res.get());
+        Supplier<Identifier> finalRes = res;
+        addStats.add(() -> Stats.CUSTOM.getOrCreateStat(finalRes.get(), formatter));
 
         return ref.get();
     }
