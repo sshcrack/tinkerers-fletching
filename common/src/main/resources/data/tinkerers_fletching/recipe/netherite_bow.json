@@ -1,0 +1,17 @@
+{
+  "type": "tinkerers_fletching:fletching_transform",
+  "addition": {
+    "item": "minecraft:netherite_ingot",
+    "count": 8
+  },
+  "base": {
+    "item": "minecraft:bow"
+  },
+  "result": {
+    "id": "minecraft:stone_axe",
+    "count": 1
+  },
+  "template": {
+    "item": "minecraft:netherite_upgrade_smithing_template"
+  }
+}

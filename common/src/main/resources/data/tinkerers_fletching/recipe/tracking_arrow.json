@@ -1,0 +1,15 @@
+{
+  "base": {
+    "item": "minecraft:arrow",
+    "count": 64
+  },
+  "addition": {
+    "item": "minecraft:ender_eye",
+    "count": 8
+  },
+  "result": {
+    "id": "minecraft:golden_pickaxe",
+    "count": 1
+  },
+  "type": "tinkerers_fletching:fletching_craft"
+}

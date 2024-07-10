@@ -1,0 +1,38 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+#issueTrackerURL = ""
+license = "CC0-1.0"
+
+[[mods]]
+modId = "tinkerers_fletching"
+version = "${version}"
+displayName = "Tinkerer's Fletching Table"
+authors = "sshcrack"
+description = '''
+Adds smithing table like functionality to the fletching table
+'''
+#logoFile = ""
+
+[[dependencies.tinkerers_fletching]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.0,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tinkerers_fletching]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tinkerers_fletching]]
+modId = "architectury"
+type = "required"
+versionRange = "[13.0.2,)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[mixins]]
+config = "tinkerers_fletching.mixins.json"

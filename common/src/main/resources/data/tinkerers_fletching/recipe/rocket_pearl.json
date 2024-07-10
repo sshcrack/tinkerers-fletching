@@ -1,0 +1,14 @@
+{
+  "base": {
+    "item": "minecraft:ender_pearl"
+  },
+  "addition": {
+    "item": "minecraft:firework_rocket",
+    "count": 2
+  },
+  "result": {
+    "id": "minecraft:golden_pickaxe",
+    "count": 1
+  },
+  "type": "tinkerers_fletching:fletching_craft"
+}

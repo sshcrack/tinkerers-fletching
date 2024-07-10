@@ -1,0 +1,15 @@
+{
+  "base": {
+    "item": "minecraft:wind_charge",
+    "count": 4
+  },
+  "addition": {
+    "item": "minecraft:wind_charge",
+    "count": 4
+  },
+  "result": {
+    "id": "minecraft:golden_pickaxe",
+    "count": 1
+  },
+  "type": "tinkerers_fletching:fletching_craft"
+}

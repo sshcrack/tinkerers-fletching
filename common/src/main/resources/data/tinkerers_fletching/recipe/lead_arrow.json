@@ -1,0 +1,13 @@
+{
+  "base": {
+    "item": "minecraft:arrow"
+  },
+  "addition": {
+    "item": "minecraft:lead"
+  },
+  "result": {
+    "id": "minecraft:golden_pickaxe",
+    "count": 1
+  },
+  "type": "tinkerers_fletching:fletching_craft"
+}

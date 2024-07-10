@@ -1,0 +1,13 @@
+{
+  "base": {
+    "item": "minecraft:golden_pickaxe"
+  },
+  "addition": {
+    "item": "minecraft:snowball"
+  },
+  "result": {
+    "id": "minecraft:golden_pickaxe",
+    "count": 1
+  },
+  "type": "tinkerers_fletching:fletching_craft"
+}
