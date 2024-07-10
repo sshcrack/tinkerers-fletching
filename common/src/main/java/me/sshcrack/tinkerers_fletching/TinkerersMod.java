@@ -2,11 +2,13 @@ package me.sshcrack.tinkerers_fletching;
 
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
-import net.minecraft.registry.Registries;
+import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
@@ -21,8 +23,7 @@ public final class TinkerersMod {
 
     private static final Supplier<RegistrarManager> MANAGER = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
 
-    public static final ScreenHandlerType<FletchingScreenHandler> FLETCHING_SCREEN_HANDLER = registerScreenHandler("fletching", FletchingScreenHandler::new);
-    public static final Identifier INTERACT_WITH_FLETCHING_TABLE = registerStat("interact_with_fletching_table", StatFormatter.DEFAULT);
+    public static final RegistrySupplier<ScreenHandlerType<FletchingScreenHandler>> FLETCHING_SCREEN_HANDLER = registerScreenHandler("fletching", FletchingScreenHandler::new);
 
 
     public static final int BASE_WORLD_EVENT = 4170000;
@@ -35,32 +36,31 @@ public final class TinkerersMod {
 
     public static void init() {
         Recipes.register();
+        TinkerersStats.register();
+        if (!Platform.isForgeLike())
+            setup();
     }
 
-    private static <T extends ScreenHandler> ScreenHandlerType<T> registerScreenHandler(String id, ScreenHandlerType.Factory<T> factory) {
-        return Registry.register(Registries.SCREEN_HANDLER, Identifier.of(MOD_ID, id), new ScreenHandlerType<>(factory, FeatureFlags.VANILLA_FEATURES));
+    public static void setup() {
+        TinkerersStats.setupEvent();
     }
 
-
-    private static Identifier registerStat(String id, StatFormatter formatter) {
-        Identifier identifier = Identifier.of(MOD_ID, id);
-
-        Registry.register(Registries.CUSTOM_STAT, id, identifier);
-        Stats.CUSTOM.getOrCreateStat(identifier, formatter);
-        return identifier;
+    private static <T extends ScreenHandler> RegistrySupplier<ScreenHandlerType<T>> registerScreenHandler(String id, ScreenHandlerType.Factory<T> factory) {
+        return register(RegistryKeys.SCREEN_HANDLER, Identifier.of(MOD_ID, id), new ScreenHandlerType<>(factory, FeatureFlags.VANILLA_FEATURES));
     }
+
 
     public static <T> Registrar<T> getRegistry(RegistryKey<Registry<T>> key) {
         return MANAGER.get().get(key);
     }
 
 
-    public static <T, E extends T> void register(RegistryKey<Registry<T>> key, Identifier id, Supplier<E> value) {
+    public static <T, E extends T> RegistrySupplier<E> register(RegistryKey<Registry<T>> key, Identifier id, Supplier<E> value) {
         var reg = getRegistry(key);
-        reg.register(id, value);
+        return reg.register(id, value);
     }
 
-    public static <T, E extends T> void register(RegistryKey<Registry<T>> key, Identifier id, E value) {
-        register(key, id, (Supplier<E>) () -> value);
+    public static <T, E extends T> RegistrySupplier<E> register(RegistryKey<Registry<T>> key, Identifier id, E value) {
+        return register(key, id, (Supplier<E>) () -> value);
     }
 }

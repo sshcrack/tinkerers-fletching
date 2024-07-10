@@ -8,6 +8,6 @@ import net.fabricmc.api.Environment;
 @Environment(EnvType.CLIENT)
 public class TinkerersModClient {
     public static void init() {
-        MenuRegistry.registerScreenFactory(TinkerersMod.FLETCHING_SCREEN_HANDLER, FletchingScreen::new);
+        MenuRegistry.registerScreenFactory(TinkerersMod.FLETCHING_SCREEN_HANDLER.get(), FletchingScreen::new);
     }
 }

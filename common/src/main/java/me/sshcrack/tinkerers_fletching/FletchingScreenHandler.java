@@ -38,7 +38,7 @@ public class FletchingScreenHandler extends ForgingScreenHandler {
     }
 
     public FletchingScreenHandler(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-        super(TinkerersMod.FLETCHING_SCREEN_HANDLER, syncId, playerInventory, context);
+        super(TinkerersMod.FLETCHING_SCREEN_HANDLER.get(), syncId, playerInventory, context);
         this.world = playerInventory.player.getWorld();
         this.recipes = this.world.getRecipeManager().listAllOfType(FletchingRecipe.Type.INSTANCE);
     }
