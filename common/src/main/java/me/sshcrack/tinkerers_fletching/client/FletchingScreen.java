@@ -7,10 +7,16 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.CyclingSlotIcon;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
-import net.minecraft.client.gui.screen.recipebook.AbstractFurnaceRecipeBookScreen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookProvider;
+import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerListener;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -18,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
+public class FletchingScreen extends HandledScreen<FletchingScreenHandler> implements RecipeBookProvider, ScreenHandlerListener {
     private static final Identifier ERROR_TEXTURE = Identifier.ofVanilla("container/smithing/error");
     private static final Identifier EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE = Identifier.ofVanilla(
             "item/empty_slot_smithing_template_netherite_upgrade"
@@ -31,9 +37,12 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     private final CyclingSlotIcon additionsSlotIcon = new CyclingSlotIcon(2);
 
     private final FletchingRecipeBookScreen recipeBook;
+    private boolean narrow;
+
+    private final Identifier topTexture = Identifier.of(TinkerersMod.MOD_ID, "textures/gui/container/fletching.png");
 
     public FletchingScreen(FletchingScreenHandler handler, PlayerInventory playerInventory, Text title) {
-        super(handler, playerInventory, title, Identifier.of(TinkerersMod.MOD_ID, "textures/gui/container/fletching.png"));
+        super(handler, playerInventory, title);
         this.titleX = 44;
         this.titleY = 15;
 
@@ -43,9 +52,19 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     @Override
     protected void init() {
         super.init();
+        this.setup();
+        this.handler.addListener(this);
+
+        this.narrow = this.width < 379;
+        this.recipeBook.initialize(this.width, this.height, this.client, this.narrow, this.handler);
+        this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
+        this.addDrawableChild(new TexturedButtonWidget(this.x + FletchingScreenHandler.RECIPE_BOOK_OFFSET / 4, 48, 20, 18, RecipeBookWidget.BUTTON_TEXTURES, button -> {
+            this.recipeBook.toggleOpen();
+            this.x = this.recipeBook.findLeftEdge(this.width, this.backgroundWidth);
+            button.setPosition(this.x + FletchingScreenHandler.RECIPE_BOOK_OFFSET / 4, 48);
+        }));
     }
 
-    @Override
     protected void setup() {
         /* sdf
         this.armorStand = new ArmorStandEntity(this.client.world, 0.0, 0.0, 0.0);
@@ -59,8 +78,15 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     }
 
     @Override
+    public void removed() {
+        super.removed();
+        handler.removeListener(this);
+    }
+
+    @Override
     public void handledScreenTick() {
         super.handledScreenTick();
+        this.recipeBook.update();
         //Optional<SmithingTemplateItem> optional = this.getFletchingTemplates();
         this.templateSlotIcon.updateTexture(EMPTY_SLOT_TEXTURES);
         //this.baseSlotIcon.updateTexture(optional.map(SmithingTemplateItem::getEmptyBaseSlotTextures).orElse(List.of()));
@@ -75,28 +101,40 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
                     : Optional.empty();
         }
     */
+
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        this.renderForeground(context, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
+
+        if (this.recipeBook.isOpen() && this.narrow) {
+            this.renderBackground(context, mouseX, mouseY, delta);
+            this.recipeBook.render(context, mouseX, mouseY, delta);
+        } else {
+            super.render(context, mouseX, mouseY, delta);
+            this.recipeBook.render(context, mouseX, mouseY, delta);
+            this.recipeBook.drawGhostSlots(context, this.x, this.y, true, delta);
+        }
+        this.recipeBook.drawTooltip(context, this.x, this.y, mouseX, mouseY);
         this.renderSlotTooltip(context, mouseX, mouseY);
     }
 
-    @Override
+
+    protected void renderForeground(DrawContext context, int mouseX, int mouseY, float delta) {
+    }
+
+
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        super.drawBackground(context, delta, mouseX, mouseY);
+        context.drawTexture(this.topTexture, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        this.drawInvalidRecipeArrow(context, this.x, this.y);
+
         this.templateSlotIcon.render(this.handler, context, delta, this.x, this.y);
         this.baseSlotIcon.render(this.handler, context, delta, this.x, this.y);
         this.additionsSlotIcon.render(this.handler, context, delta, this.x, this.y);
     }
 
-    @Override
-    public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
-        if (slotId == 3) {
-            //this.equipArmorStand(stack);
-        }
-    }
-
-    @Override
     protected void drawInvalidRecipeArrow(DrawContext context, int x, int y) {
         if (this.hasInvalidRecipe()) {
             context.drawGuiTexture(ERROR_TEXTURE, x + 65, y + 46, 28, 21);
@@ -133,5 +171,68 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
                 && this.handler.getSlot(1).hasStack()
                 && this.handler.getSlot(2).hasStack()
                 && !this.handler.getSlot(this.handler.getResultSlotIndex()).hasStack();
+    }
+
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (this.recipeBook.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+        if (this.narrow && this.recipeBook.isOpen()) {
+            return true;
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    protected void onMouseClick(Slot slot, int slotId, int button, SlotActionType actionType) {
+        super.onMouseClick(slot, slotId, button, actionType);
+        this.recipeBook.slotClicked(slot);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (this.recipeBook.keyPressed(keyCode, scanCode, modifiers)) {
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
+        boolean bl = mouseX < (double) left || mouseY < (double) top || mouseX >= (double) (left + this.backgroundWidth) || mouseY >= (double) (top + this.backgroundHeight);
+        return this.recipeBook.isClickOutsideBounds(mouseX, mouseY, this.x, this.y, this.backgroundWidth, this.backgroundHeight, button) && bl;
+    }
+
+    @Override
+    public boolean charTyped(char chr, int modifiers) {
+        if (this.recipeBook.charTyped(chr, modifiers)) {
+            return true;
+        }
+        return super.charTyped(chr, modifiers);
+    }
+
+
+    @Override
+    public void refreshRecipeBook() {
+        this.recipeBook.refresh();
+    }
+
+    @Override
+    public RecipeBookWidget getRecipeBookWidget() {
+        return recipeBook;
+    }
+
+    @Override
+    public void onPropertyUpdate(ScreenHandler handler, int property, int value) {
+
+    }
+
+    @Override
+    public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
+        if (slotId == 3) {
+            //this.equipArmorStand(stack);
+        }
     }
 }
