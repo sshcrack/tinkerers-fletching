@@ -14,6 +14,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
@@ -30,10 +32,11 @@ public class IronEggEntity extends ThrownItemEntity {
     public IronEggEntity(World world, double x, double y, double z) {
         super(TinkerersEntities.IRON_EGG.get(), x, y, z, world);
     }
+
     @Override
     public void handleStatus(byte status) {
-        if (status == 3) {
-            double d = 0.08;
+        if (status == EntityStatuses.PLAY_DEATH_SOUND_OR_ADD_PROJECTILE_HIT_PARTICLES) {
+            this.getWorld().playSound(this.getX(), this.getY(), this.getZ(), SoundEvents.BLOCK_ANVIL_HIT, SoundCategory.PLAYERS, 1.0f, random.nextFloat() * 0.7f + 0.3f, false);
             for (int i = 0; i < 8; ++i) {
                 this.getWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, this.getStack()), this.getX(), this.getY(), this.getZ(), ((double) this.random.nextFloat() - 0.5) * 0.08, ((double) this.random.nextFloat() - 0.5) * 0.08, ((double) this.random.nextFloat() - 0.5) * 0.08);
             }
@@ -43,7 +46,7 @@ public class IronEggEntity extends ThrownItemEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        entityHitResult.getEntity().damage(this.getDamageSources().thrown(this, this.getOwner()), 0.0f);
+        entityHitResult.getEntity().damage(this.getDamageSources().thrown(this, this.getOwner()), 1.0f);
     }
 
     @Override

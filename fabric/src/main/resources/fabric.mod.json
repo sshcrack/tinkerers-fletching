@@ -25,6 +25,7 @@
   "mixins": [
     "tinkerers_fletching.mixins.json"
   ],
+  "accessWidener": "tinkerers_fletching.accesswidener",
   "depends": {
     "fabricloader": ">=0.15.11",
     "minecraft": "~1.21",

@@ -2,6 +2,11 @@ plugins {
     id 'com.github.johnrengelman.shadow'
 }
 
+
+File commonAW = project ':common' file 'src/main/resources/tinkerers_fletching.accesswidener'
+File generatedResources = file 'src/generated/resources'
+
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -37,7 +42,18 @@ dependencies {
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 }
 
+sourceSets.main.resources.srcDir generatedResources
+
+
+// AccessWidener
+tasks.register('copyAW', Copy) {
+    from commonAW
+    into generatedResources
+}
+
+
 processResources {
+    dependsOn("copyAW")
     inputs.property 'version', project.version
 
     filesMatching('fabric.mod.json') {
@@ -46,6 +62,7 @@ processResources {
 }
 
 shadowJar {
+    dependsOn("copyAW")
     configurations = [project.configurations.shadowBundle]
     archiveClassifier = 'dev-shadow'
 }

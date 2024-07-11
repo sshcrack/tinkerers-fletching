@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "tinkerers_fletching:item/ice_spike"
+    "layer0": "tinkerers_fletching:item/icy_snowball"
   }
 }

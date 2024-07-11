@@ -7,6 +7,12 @@ architectury {
     neoForge()
 }
 
+loom {
+    neoForge {
+        accessWidenerPath = project(":common").file("src/main/resources/tinkerers_fletching.accesswidener")
+    }
+}
+
 configurations {
     common {
         canBeResolved = true
@@ -56,4 +62,5 @@ shadowJar {
 
 remapJar {
     input.set shadowJar.archiveFile
+    atAccessWideners.add "tinkerers_fletching.accesswidener"
 }
