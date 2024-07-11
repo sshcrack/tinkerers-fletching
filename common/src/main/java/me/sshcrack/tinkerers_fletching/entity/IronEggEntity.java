@@ -1,5 +1,6 @@
 package me.sshcrack.tinkerers_fletching.entity;
 
+import me.sshcrack.tinkerers_fletching.TinkerersItems;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.projectile.thrown.EggEntity;
 import net.minecraft.item.Item;
@@ -12,6 +13,6 @@ public class IronEggEntity extends EggEntity {
     }
 
     protected Item getDefaultItem() {
-        return Items.EGG;
+        return TinkerersItems.IRON_EGG.get();
     }
 }

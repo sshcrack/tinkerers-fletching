@@ -13,12 +13,13 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 
-public class BigSnowballItem extends Item implements FletchingItem, ProjectileItem {
+public class BigSnowballItem extends FletchingItem implements ProjectileItem {
     public BigSnowballItem() {
         super(new Item.Settings());
     }

@@ -16,7 +16,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 
-public class HugeSnowballItem extends Item implements FletchingItem, ProjectileItem {
+public class HugeSnowballItem extends FletchingItem implements ProjectileItem {
     public HugeSnowballItem() {
         super(new Item.Settings());
     }

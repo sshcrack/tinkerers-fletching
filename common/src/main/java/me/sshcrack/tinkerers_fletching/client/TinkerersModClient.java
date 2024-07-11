@@ -14,5 +14,6 @@ public class TinkerersModClient {
         TinkerersMod.LOGGER.info("Initializing client features");
 
         ScreenRegister.registerScreenFactory(TinkerersMod.FLETCHING_SCREEN_HANDLER.get(), FletchingScreen::new);
+        TinkerersEntitiesClient.register();
     }
 }

@@ -1,9 +1,10 @@
 package me.sshcrack.tinkerers_fletching.item.projectile;
 
+import me.sshcrack.tinkerers_fletching.entity.BigSnowballEntity;
+import me.sshcrack.tinkerers_fletching.entity.IceSpikeEntity;
 import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.thrown.EggEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ProjectileItem;
@@ -16,8 +17,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 
-public class IronEggItem extends FletchingItem implements ProjectileItem {
-    public IronEggItem() {
+public class IceSpikeItem extends FletchingItem implements ProjectileItem {
+    public IceSpikeItem() {
         super(new Item.Settings());
     }
 
@@ -28,17 +29,17 @@ public class IronEggItem extends FletchingItem implements ProjectileItem {
 
     @Override
     public int getPower() {
-        return 6;
+        return 3;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
-        world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_EGG_THROW, SoundCategory.PLAYERS, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
+        world.playSound(null, user.getX(), user.getY(), user.getZ(), SoundEvents.ENTITY_SNOWBALL_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (world.getRandom().nextFloat() * 0.4F + 0.8F));
         if (!world.isClient) {
-            EggEntity eggEntity = new EggEntity(world, user);
-            eggEntity.setItem(itemStack);
-            eggEntity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
-            world.spawnEntity(eggEntity);
+            IceSpikeEntity iceSpike = new IceSpikeEntity(world, user);
+            iceSpike.setItem(itemStack);
+            iceSpike.setVelocity(user, user.getPitch(), user.getYaw(), 0.0F, 1.5F, 1.0F);
+            world.spawnEntity(iceSpike);
         }
 
         user.incrementStat(Stats.USED.getOrCreateStat(this));
@@ -47,8 +48,8 @@ public class IronEggItem extends FletchingItem implements ProjectileItem {
     }
 
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
-        EggEntity eggEntity = new EggEntity(world, pos.getX(), pos.getY(), pos.getZ());
-        eggEntity.setItem(stack);
-        return eggEntity;
+        IceSpikeEntity iceSpike = new IceSpikeEntity(world, pos.getX(), pos.getY(), pos.getZ());
+        iceSpike.setItem(stack);
+        return iceSpike;
     }
 }

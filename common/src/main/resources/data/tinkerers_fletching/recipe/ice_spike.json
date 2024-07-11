@@ -7,7 +7,7 @@
     "item": "minecraft:ice"
   },
   "result": {
-    "id": "minecraft:golden_pickaxe",
+    "id": "tinkerers_fletching:ice_spike",
     "count": 1
   },
   "type": "tinkerers_fletching:fletching_craft"

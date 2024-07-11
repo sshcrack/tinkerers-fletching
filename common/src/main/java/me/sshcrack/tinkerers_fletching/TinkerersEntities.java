@@ -1,8 +1,10 @@
 package me.sshcrack.tinkerers_fletching;
 
+import dev.architectury.registry.client.level.entity.EntityRendererRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import me.sshcrack.tinkerers_fletching.entity.BigSnowballEntity;
 import me.sshcrack.tinkerers_fletching.entity.HugeSnowballEntity;
+import me.sshcrack.tinkerers_fletching.entity.IronEggEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnGroup;
@@ -14,6 +16,8 @@ import java.util.function.Consumer;
 public class TinkerersEntities {
     public static final RegistrySupplier<EntityType<BigSnowballEntity>> BIG_SNOWBALL = register("big_snowball", BigSnowballEntity::new, b -> b.dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10));
     public static final RegistrySupplier<EntityType<HugeSnowballEntity>> HUGE_SNOWBALL = register("huge_snowball", HugeSnowballEntity::new, b -> b.dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10));
+
+    public static final RegistrySupplier<EntityType<IronEggEntity>> IRON_EGG = register("iron_egg", IronEggEntity::new, b -> b.dimensions(0.25f, 0.25f).maxTrackingRange(4).trackingTickInterval(10));
 
 
     private static <T extends Entity> RegistrySupplier<EntityType<T>> register(String name, EntityType.EntityFactory<T> factory, Consumer<EntityType.Builder<T>> configureBuilder) {

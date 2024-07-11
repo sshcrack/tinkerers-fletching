@@ -2,17 +2,18 @@ package me.sshcrack.tinkerers_fletching.client;
 
 import me.sshcrack.tinkerers_fletching.FletchingScreenHandler;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
+import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.CyclingSlotIcon;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
-import net.minecraft.client.gui.screen.recipebook.AbstractFurnaceRecipeBookScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,9 +21,11 @@ import java.util.Optional;
 @Environment(EnvType.CLIENT)
 public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     private static final Identifier ERROR_TEXTURE = Identifier.ofVanilla("container/smithing/error");
+    private static final Identifier RES_BASE_TEXTURE = Identifier.of(TinkerersMod.MOD_ID, "container/base");
     private static final Identifier EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE = Identifier.ofVanilla(
             "item/empty_slot_smithing_template_netherite_upgrade"
     );
+
     private static final Text MISSING_TEMPLATE_TOOLTIP = Text.translatable("container.upgrade.missing_template_tooltip");
     private static final Text ERROR_TOOLTIP = Text.translatable("container.upgrade.error_tooltip");
     private static final List<Identifier> EMPTY_SLOT_TEXTURES = List.of(EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE);
@@ -31,6 +34,9 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     private final CyclingSlotIcon additionsSlotIcon = new CyclingSlotIcon(2);
 
     private final FletchingRecipeBookScreen recipeBook;
+    @Nullable
+    private Identifier resPicture;
+    private boolean useResBase = true;
 
     public FletchingScreen(FletchingScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title, Identifier.of(TinkerersMod.MOD_ID, "textures/gui/container/fletching.png"));
@@ -77,6 +83,13 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     */
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        if (resPicture != null) {
+            if(useResBase) {
+                context.drawGuiTexture(RES_BASE_TEXTURE, this.x + 65, this.y + 46, 28, 21);
+            }
+            context.drawGuiTexture(resPicture, this.x + 65, this.y + 46, 28, 21);
+        }
+
         super.render(context, mouseX, mouseY, delta);
         this.renderSlotTooltip(context, mouseX, mouseY);
     }
@@ -91,9 +104,15 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
 
     @Override
     public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
-        if (slotId == 3) {
-            //this.equipArmorStand(stack);
+        if (slotId != 3)
+            return;
+        if (!(stack.getItem() instanceof FletchingItem fletchingItem)) {
+            resPicture = null;
+            return;
         }
+
+        resPicture = fletchingItem.getResultTexture();
+        useResBase = fletchingItem.isResultTextureUsingBase();
     }
 
     @Override

@@ -6,7 +6,7 @@
     "item": "minecraft:snowball"
   },
   "result": {
-    "id": "minecraft:golden_pickaxe",
+    "id": "tinkerers_fletching:big_snowball",
     "count": 1
   },
   "type": "tinkerers_fletching:fletching_craft"

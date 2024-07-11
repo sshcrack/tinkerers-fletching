@@ -1,8 +1,6 @@
 package me.sshcrack.tinkerers_fletching.item;
 
-import net.minecraft.item.Item;
-
-public class SpeedoPearlItem extends Item implements FletchingItem {
+public class SpeedoPearlItem extends FletchingItem {
     public SpeedoPearlItem() {
         super(new Settings());
     }
