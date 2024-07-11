@@ -110,12 +110,8 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
             renderHealthBar(context, this.x + 77, this.y + 15, 6, resItem.getPower());
 
             context.drawText(this.textRenderer, SPEED_TEXT, this.x + 44, this.y + 35, 0x8b898a, false);
-            var bow = Items.BOW.getDefaultStack();
 
-            //noinspection DataFlowIssue
-            BowPullingDummyDuck.class.cast(bow).tinkerers$setPull(resItem.getSpeedLevel().ordinal() / 3f);
-
-            context.drawItemWithoutEntity(bow, this.x + 77, this.y + 35 - 8, 0);
+            context.drawGuiTexture(resItem.getSpeedLevel().getTexture(), this.x + 77, this.y + 35 - 8, 16, 16);
         }
 
         this.renderSlotTooltip(context, mouseX, mouseY);

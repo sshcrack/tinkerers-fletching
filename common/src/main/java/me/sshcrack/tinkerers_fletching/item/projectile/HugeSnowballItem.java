@@ -29,7 +29,7 @@ public class HugeSnowballItem extends FletchingItem implements ProjectileItem {
 
     @Override
     public int getPower() {
-        return 6;
+        return 4;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {

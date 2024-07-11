@@ -3,7 +3,7 @@
     "item": "minecraft:snowball"
   },
   "addition": {
-    "item": "minecraft:snowball"
+    "item": "tinkerers_fletching:big_snowball"
   },
   "result": {
     "id": "tinkerers_fletching:huge_snowball",
