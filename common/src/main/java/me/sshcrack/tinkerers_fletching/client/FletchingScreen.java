@@ -8,6 +8,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.CyclingSlotIcon;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
+import net.minecraft.client.texture.Scaling;
+import net.minecraft.client.texture.Sprite;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
@@ -21,8 +23,7 @@ import java.util.Optional;
 @Environment(EnvType.CLIENT)
 public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     private static final Identifier ERROR_TEXTURE = Identifier.ofVanilla("container/smithing/error");
-    private static final Identifier RES_BASE_TEXTURE = Identifier.of(TinkerersMod.MOD_ID, "container/base");
-    private static final Identifier EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE = Identifier.ofVanilla(
+     private static final Identifier EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE = Identifier.ofVanilla(
             "item/empty_slot_smithing_template_netherite_upgrade"
     );
 
@@ -36,12 +37,13 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     private final FletchingRecipeBookScreen recipeBook;
     @Nullable
     private Identifier resPicture;
-    private boolean useResBase = true;
+    @Nullable
+    private Identifier baseTexture;
 
     public FletchingScreen(FletchingScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title, Identifier.of(TinkerersMod.MOD_ID, "textures/gui/container/fletching.png"));
         this.titleX = 44;
-        this.titleY = 15;
+        this.titleY = 4;
 
         recipeBook = new FletchingRecipeBookScreen();
     }
@@ -81,16 +83,21 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
                     : Optional.empty();
         }
     */
+
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
         if (resPicture != null) {
-            if(useResBase) {
-                context.drawGuiTexture(RES_BASE_TEXTURE, this.x + 65, this.y + 46, 28, 21);
+            var xPos = 117;
+            var yPos = 22;
+
+            var size = 55;
+            if (baseTexture != null) {
+                context.drawGuiTexture(baseTexture, this.x + xPos, this.y + yPos, size, size);
             }
-            context.drawGuiTexture(resPicture, this.x + 65, this.y + 46, 28, 21);
+            context.drawGuiTexture(resPicture, this.x + xPos, this.y + yPos, size, size);
         }
 
-        super.render(context, mouseX, mouseY, delta);
         this.renderSlotTooltip(context, mouseX, mouseY);
     }
 
@@ -112,7 +119,7 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
         }
 
         resPicture = fletchingItem.getResultTexture();
-        useResBase = fletchingItem.isResultTextureUsingBase();
+        baseTexture = fletchingItem.getBaseTexture();
     }
 
     @Override

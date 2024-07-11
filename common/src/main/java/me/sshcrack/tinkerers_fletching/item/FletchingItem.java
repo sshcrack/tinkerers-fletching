@@ -4,6 +4,7 @@ import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 public abstract class FletchingItem extends Item {
     public FletchingItem(Settings settings) {
@@ -25,14 +26,15 @@ public abstract class FletchingItem extends Item {
         FAST
     }
 
-    public boolean isResultTextureUsingBase() {
-        return true;
+    @Nullable
+    public Identifier getBaseTexture() {
+        return Identifier.of(TinkerersMod.MOD_ID, "container/fletching/result/overworld");
     }
 
+    @Nullable
     public Identifier getResultTexture() {
-        var splitTexture = Registries.ITEM.getId(this).getPath();
+        var itemName = Registries.ITEM.getId(this).getPath();
 
-        var useBase = isResultTextureUsingBase();
-        return Identifier.of(TinkerersMod.MOD_ID, "container/result/" + (useBase ? "additions" : "no_base") + "/" + splitTexture);
+        return Identifier.of(TinkerersMod.MOD_ID, "container/fletching/result/item/" + itemName);
     }
 }

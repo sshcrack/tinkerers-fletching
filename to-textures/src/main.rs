@@ -34,12 +34,16 @@ fn main() {
     let mc_width = width / PIXEL_SIZE;
     let mc_height = height / PIXEL_SIZE;
 
-    if mc_width != base_img.width() || mc_height != base_img.height() && use_base {
+    if mc_width > base_img.width() || mc_height > base_img.height() {
         panic!("Image sizes do not match (has to be {} {} but has {} {})", base_img.width() * PIXEL_SIZE, base_img.height() * PIXEL_SIZE, width, height);
     }
 
-    let mut out_img = image::ImageBuffer::<Rgba<u8>, Vec<u8>>::new(mc_width, mc_height);
 
+    let desired_size = 55;
+    let mut out_img = image::ImageBuffer::<Rgba<u8>, Vec<u8>>::new(desired_size, desired_size);
+
+    let mc_base_x_start = base_img.width() - mc_width;
+    let mc_base_y_start = base_img.height() - mc_height;
 
     for mc_x in 0..mc_width {
         for mc_y in 0..mc_height {
@@ -74,13 +78,13 @@ fn main() {
 
             let to_write = Rgba([r as u8, g as u8, b as u8, a as u8]);
             if use_base {
-                let base_pixel = base_img.get_pixel(mc_x, mc_y);
+                let base_pixel = base_img.get_pixel(mc_x + mc_base_x_start, mc_y + mc_base_y_start);
                 if is_same(&base_pixel, &to_write) {
                     continue;
                 }
             }
 
-            out_img.put_pixel(mc_x, mc_y, to_write);
+            out_img.put_pixel(mc_x + mc_base_x_start, mc_y + mc_base_y_start, to_write);
         }
     }
 

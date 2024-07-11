@@ -1,8 +1,13 @@
 package me.sshcrack.tinkerers_fletching;
 
+import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import me.sshcrack.tinkerers_fletching.item.projectile.*;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
@@ -20,6 +25,14 @@ public class TinkerersItems {
     }
 
     public static void register() {
-        // NO-OP
+        CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.getOrThrow(ItemGroups.COMBAT), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptAfter(Items.SNOWBALL, BIG_SNOWBALL.get());
+            output.acceptAfter(Items.SNOWBALL, HUGE_SNOWBALL.get());
+            output.acceptAfter(Items.SNOWBALL, ICE_SPIKE.get());
+
+            output.acceptAfter(Items.EGG, IRON_EGG.get());
+            output.acceptAfter(Items.WIND_CHARGE, STORM_CHARGE.get());
+
+        });
     }
 }

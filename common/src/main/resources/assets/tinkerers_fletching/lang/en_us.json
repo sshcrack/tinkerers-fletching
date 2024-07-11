@@ -1,5 +1,11 @@
 {
   "container.tinkerers_fletching.fletching_table": "Fletching Table",
   "container.tinkerers_fletching.customize": "Customize Projectiles",
-  "stat.tinkerers_fletching.interact_with_fletching_table": "Interactions with Fletching Table"
+  "stat.tinkerers_fletching.interact_with_fletching_table": "Interactions with Fletching Table",
+
+  "item.tinkerers_fletching.iron_egg": "Iron Egg",
+  "item.tinkerers_fletching.big_snowball": "Big Snowball",
+  "item.tinkerers_fletching.huge_snowball": "Huge Snowball",
+  "item.tinkerers_fletching.ice_spike": "Ice Spike",
+  "item.tinkerers_fletching.storm_charge": "Storm Charge"
 }
