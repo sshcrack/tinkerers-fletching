@@ -4,11 +4,14 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
+    "client.BowPullingOverwriteMixin",
     "client.ClientRecipeBookMixin",
+    "client.ModelOverrideListMixin",
     "client.WorldRendererMixin"
   ],
   "mixins": [
-    "FletchingTableBlockMixin"
+    "FletchingTableBlockMixin",
+    "PersistentProjectileEntityAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

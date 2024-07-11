@@ -1,28 +1,32 @@
 package me.sshcrack.tinkerers_fletching.entity;
 
+import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.TinkerersItems;
-import net.minecraft.entity.Entity;
+import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.projectile.thrown.SnowballEntity;
-import net.minecraft.item.Item;
 import net.minecraft.world.World;
 
-public class HugeSnowballEntity extends SnowballEntity {
-    public HugeSnowballEntity(EntityType<? extends SnowballEntity> entityType, World world) {
+public class HugeSnowballEntity extends BaseSnowballEntity {
+    public HugeSnowballEntity(EntityType<? extends BaseSnowballEntity> entityType, World world) {
         super(entityType, world);
     }
 
     public HugeSnowballEntity(World world, LivingEntity owner) {
-        super(world, owner);
+        super(TinkerersEntities.HUGE_SNOWBALL.get(), world, owner);
     }
 
     public HugeSnowballEntity(World world, double x, double y, double z) {
-        super(world, x, y, z);
+        super(TinkerersEntities.HUGE_SNOWBALL.get(), world, x, y, z);
     }
 
     @Override
-    protected Item getDefaultItem() {
+    protected FletchingItem getDefaultItem() {
         return TinkerersItems.HUGE_SNOWBALL.get();
+    }
+
+    @Override
+    public int getDamage() {
+        return getDefaultItem().getPower();
     }
 }

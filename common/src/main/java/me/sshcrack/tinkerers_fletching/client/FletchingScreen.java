@@ -1,21 +1,28 @@
 package me.sshcrack.tinkerers_fletching.client;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import me.sshcrack.tinkerers_fletching.FletchingScreenHandler;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.gui.screen.ingame.CyclingSlotIcon;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
 import net.minecraft.client.texture.Scaling;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,12 +30,16 @@ import java.util.Optional;
 @Environment(EnvType.CLIENT)
 public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     private static final Identifier ERROR_TEXTURE = Identifier.ofVanilla("container/smithing/error");
-     private static final Identifier EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE = Identifier.ofVanilla(
+    private static final Identifier EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE = Identifier.ofVanilla(
             "item/empty_slot_smithing_template_netherite_upgrade"
     );
 
     private static final Text MISSING_TEMPLATE_TOOLTIP = Text.translatable("container.upgrade.missing_template_tooltip");
     private static final Text ERROR_TOOLTIP = Text.translatable("container.upgrade.error_tooltip");
+
+    private static final Text POWER_TEXT = Text.translatable("container.tinkerers_fletching.power");
+    private static final Text SPEED_TEXT = Text.translatable("container.tinkerers_fletching.speed");
+
     private static final List<Identifier> EMPTY_SLOT_TEXTURES = List.of(EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE);
     private final CyclingSlotIcon templateSlotIcon = new CyclingSlotIcon(0);
     private final CyclingSlotIcon baseSlotIcon = new CyclingSlotIcon(1);
@@ -36,9 +47,7 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
 
     private final FletchingRecipeBookScreen recipeBook;
     @Nullable
-    private Identifier resPicture;
-    @Nullable
-    private Identifier baseTexture;
+    private FletchingItem resItem;
 
     public FletchingScreen(FletchingScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title, Identifier.of(TinkerersMod.MOD_ID, "textures/gui/container/fletching.png"));
@@ -87,15 +96,26 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        if (resPicture != null) {
+        if (resItem != null) {
             var xPos = 117;
             var yPos = 22;
 
             var size = 55;
-            if (baseTexture != null) {
-                context.drawGuiTexture(baseTexture, this.x + xPos, this.y + yPos, size, size);
+            if (resItem.getBaseTexture() != null) {
+                context.drawGuiTexture(resItem.getBaseTexture(), this.x + xPos, this.y + yPos, size, size);
             }
-            context.drawGuiTexture(resPicture, this.x + xPos, this.y + yPos, size, size);
+            context.drawGuiTexture(resItem.getResultTexture(), this.x + xPos, this.y + yPos, size, size);
+
+            context.drawText(this.textRenderer, POWER_TEXT, this.x + 44, this.y + 15, 0x8b898a, false);
+            renderHealthBar(context, this.x + 77, this.y + 15, 6, resItem.getPower());
+
+            context.drawText(this.textRenderer, SPEED_TEXT, this.x + 44, this.y + 35, 0x8b898a, false);
+            var bow = Items.BOW.getDefaultStack();
+
+            //noinspection DataFlowIssue
+            BowPullingDummyDuck.class.cast(bow).tinkerers$setPull(resItem.getSpeedLevel().ordinal() / 3f);
+
+            context.drawItemWithoutEntity(bow, this.x + 77, this.y + 35 - 8, 0);
         }
 
         this.renderSlotTooltip(context, mouseX, mouseY);
@@ -114,12 +134,11 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
         if (slotId != 3)
             return;
         if (!(stack.getItem() instanceof FletchingItem fletchingItem)) {
-            resPicture = null;
+            resItem = null;
             return;
         }
 
-        resPicture = fletchingItem.getResultTexture();
-        baseTexture = fletchingItem.getBaseTexture();
+        resItem = fletchingItem;
     }
 
     @Override
@@ -159,5 +178,27 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
                 && this.handler.getSlot(1).hasStack()
                 && this.handler.getSlot(2).hasStack()
                 && !this.handler.getSlot(this.handler.getResultSlotIndex()).hasStack();
+    }
+
+
+    private void renderHealthBar(DrawContext context, int x, int y, int maxHealth, int health) {
+        drawHearts(context, InGameHud.HeartType.CONTAINER, x, y, maxHealth);
+        drawHearts(context, InGameHud.HeartType.NORMAL, x, y, health);
+    }
+
+    private void drawHearts(DrawContext context, InGameHud.HeartType type, int x, int y, int health) {
+        for (int i = 0; i < health; i++) {
+            var xOffset = x + (i / 2) * 8;
+            var isLastHalf = i == health - 1;
+            if (!isLastHalf)
+                i++;
+            this.drawHeart(context, type, xOffset, y, isLastHalf);
+        }
+    }
+
+    private void drawHeart(DrawContext context, InGameHud.HeartType type, int x, int y, boolean half) {
+        RenderSystem.enableBlend();
+        context.drawGuiTexture(type.getTexture(false, half, false), x, y, 9, 9);
+        RenderSystem.disableBlend();
     }
 }

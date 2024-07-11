@@ -19,15 +19,6 @@ import java.util.List;
 import java.util.OptionalInt;
 
 public class FletchingScreenHandler extends ForgingScreenHandler {
-    public static final int TEMPLATE_ID = 0;
-    public static final int EQUIPMENT_ID = 1;
-    public static final int MATERIAL_ID = 2;
-    public static final int OUTPUT_ID = 3;
-    public static final int TEMPLATE_X = 8;
-    public static final int EQUIPMENT_X = 26;
-    public static final int MATERIAL_X = 44;
-    private static final int OUTPUT_X = 98;
-    public static final int SLOT_Y = 48;
     private final World world;
     @Nullable
     private RecipeEntry<FletchingRecipe> currentRecipe;
