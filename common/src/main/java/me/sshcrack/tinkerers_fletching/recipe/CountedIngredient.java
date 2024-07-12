@@ -4,8 +4,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
-import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
+import me.sshcrack.tinkerers_fletching.recipe.custom.ArchCustomIngredient;
+import me.sshcrack.tinkerers_fletching.recipe.custom.ArchCustomIngredientSerializer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -15,7 +15,7 @@ import net.minecraft.util.Identifier;
 import java.util.Arrays;
 import java.util.List;
 
-public record CountedIngredient(Ingredient ingredient, int count) implements CustomIngredient {
+public record CountedIngredient(Ingredient ingredient, int count) implements ArchCustomIngredient {
     public static final Codec<CountedIngredient> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Ingredient.ALLOW_EMPTY_CODEC.fieldOf("ingredient").forGetter(CountedIngredient::ingredient),
             Codec.INT.fieldOf("count").orElse(1).forGetter(CountedIngredient::count)
@@ -64,11 +64,11 @@ public record CountedIngredient(Ingredient ingredient, int count) implements Cus
     }
 
     @Override
-    public CustomIngredientSerializer<?> getSerializer() {
+    public ArchCustomIngredientSerializer<?> getSerializer() {
         return SERIALIZER;
     }
 
-    public static class Serializer implements CustomIngredientSerializer<CountedIngredient> {
+    public static class Serializer implements ArchCustomIngredientSerializer<CountedIngredient> {
         public static final Identifier ID = Identifier.of(TinkerersMod.MOD_ID, "counted_ingredient");
 
         @Override

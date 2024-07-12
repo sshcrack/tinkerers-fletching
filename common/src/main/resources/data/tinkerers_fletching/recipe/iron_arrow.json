@@ -1,14 +1,20 @@
 {
   "base": {
-    "item": "minecraft:arrow",
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:arrow"
+    },
     "count": 64
   },
   "addition": {
-    "item": "minecraft:iron_ingot"
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:iron_ingot"
+    }
   },
   "result": {
-    "id": "minecraft:golden_pickaxe",
-    "count": 1
+    "id": "minecraft:arrow",
+    "count": 64
   },
   "type": "tinkerers_fletching:fletching_craft"
 }

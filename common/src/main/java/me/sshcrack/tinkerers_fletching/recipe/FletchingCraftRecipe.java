@@ -3,6 +3,7 @@ package me.sshcrack.tinkerers_fletching.recipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
+import me.sshcrack.tinkerers_fletching.recipe.custom.ArchCustomIngredient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
@@ -51,6 +52,21 @@ public class FletchingCraftRecipe implements FletchingRecipe {
     @Override
     public boolean testAddition(ItemStack stack) {
         return this.addition.test(stack);
+    }
+
+    @Override
+    public ArchCustomIngredient getTemplateIngredient() {
+        return null;
+    }
+
+    @Override
+    public ArchCustomIngredient getBaseIngredient() {
+        return base;
+    }
+
+    @Override
+    public ArchCustomIngredient getAdditionIngredient() {
+        return addition;
     }
 
     @Override

@@ -1,15 +1,21 @@
 {
   "base": {
-    "item": "minecraft:egg",
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:egg"
+    },
     "count": 16
   },
   "addition": {
-    "item": "minecraft:iron_ingot",
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:iron_ingot"
+    },
     "count": 4
   },
   "result": {
     "id": "tinkerers_fletching:iron_egg",
-    "count": 1
+    "count": 16
   },
   "type": "tinkerers_fletching:fletching_craft"
 }

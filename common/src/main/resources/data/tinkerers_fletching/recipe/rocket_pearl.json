@@ -1,13 +1,19 @@
 {
   "base": {
-    "item": "minecraft:ender_pearl"
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:ender_pearl"
+    }
   },
   "addition": {
-    "item": "minecraft:firework_rocket",
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:firework_rocket"
+    },
     "count": 2
   },
   "result": {
-    "id": "minecraft:golden_pickaxe",
+    "id": "minecraft:arrow",
     "count": 1
   },
   "type": "tinkerers_fletching:fletching_craft"

@@ -18,7 +18,8 @@ import net.minecraft.world.World;
 
 public class IcySnowballItem extends FletchingItem implements ProjectileItem {
     public IcySnowballItem() {
-        super(new Item.Settings());
+        super(new Item.Settings()
+                .maxCount(16));
     }
 
     @Override

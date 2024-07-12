@@ -1,17 +1,26 @@
 {
   "type": "tinkerers_fletching:fletching_transform",
   "addition": {
-    "item": "minecraft:netherite_ingot",
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:netherite_ingot"
+    },
     "count": 8
   },
   "base": {
-    "item": "minecraft:trident"
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:trident"
+    }
   },
   "result": {
-    "id": "minecraft:stone_axe",
+    "id": "minecraft:arrow",
     "count": 1
   },
   "template": {
-    "item": "minecraft:netherite_upgrade_smithing_template"
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:netherite_upgrade_smithing_template"
+    }
   }
 }

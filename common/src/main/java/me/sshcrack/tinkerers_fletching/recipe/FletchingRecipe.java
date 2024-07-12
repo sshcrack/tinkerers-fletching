@@ -1,11 +1,13 @@
 package me.sshcrack.tinkerers_fletching.recipe;
 
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
+import me.sshcrack.tinkerers_fletching.recipe.custom.ArchCustomIngredient;
 import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
 public interface FletchingRecipe extends Recipe<FletchingRecipeInput> {
     @Override
@@ -28,6 +30,13 @@ public interface FletchingRecipe extends Recipe<FletchingRecipeInput> {
     boolean testBase(ItemStack stack);
 
     boolean testAddition(ItemStack stack);
+
+    @Nullable
+    ArchCustomIngredient getTemplateIngredient();
+
+    ArchCustomIngredient getBaseIngredient();
+
+    ArchCustomIngredient getAdditionIngredient();
 
     class Type implements RecipeType<FletchingRecipe> {
         private Type() {

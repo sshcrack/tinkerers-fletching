@@ -1,5 +1,6 @@
 package me.sshcrack.tinkerers_fletching;
 
+import me.sshcrack.tinkerers_fletching.recipe.CountedIngredient;
 import me.sshcrack.tinkerers_fletching.recipe.FletchingRecipe;
 import me.sshcrack.tinkerers_fletching.recipe.FletchingRecipeInput;
 import net.minecraft.block.BlockState;
@@ -57,11 +58,29 @@ public class FletchingScreenHandler extends ForgingScreenHandler {
 
     @Override
     protected void onTakeOutput(PlayerEntity player, ItemStack stack) {
+        if (currentRecipe == null)
+            return;
+
         stack.onCraftByPlayer(player.getWorld(), player, stack.getCount());
         this.output.unlockLastRecipe(player, this.getInputStacks());
-        this.decrementStack(0);
-        this.decrementStack(1);
-        this.decrementStack(2);
+
+        var val = currentRecipe.value();
+        var templateCount = 1;
+        var baseCount = 1;
+        var additionCount = 1;
+
+        if (val.getTemplateIngredient() instanceof CountedIngredient i)
+            templateCount = i.count();
+
+        if (val.getBaseIngredient() instanceof CountedIngredient i)
+            baseCount = i.count();
+
+        if (val.getAdditionIngredient() instanceof CountedIngredient i)
+            additionCount = i.count();
+
+        this.decrementStack(0, templateCount);
+        this.decrementStack(1, baseCount);
+        this.decrementStack(2, additionCount);
         this.context.run((world, pos) -> world.syncWorldEvent(TinkerersMod.FLETCHING_USED_WORLD_EVENT, pos, 0));
     }
 
@@ -73,10 +92,10 @@ public class FletchingScreenHandler extends ForgingScreenHandler {
         return new FletchingRecipeInput(this.input.getStack(0), this.input.getStack(1), this.input.getStack(2));
     }
 
-    private void decrementStack(int slot) {
+    private void decrementStack(int slot, int count) {
         ItemStack itemStack = this.input.getStack(slot);
         if (!itemStack.isEmpty()) {
-            itemStack.decrement(1);
+            itemStack.decrement(count);
             this.input.setStack(slot, itemStack);
         }
     }
