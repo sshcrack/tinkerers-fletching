@@ -15,11 +15,11 @@ import net.minecraft.world.World;
 import java.util.stream.Stream;
 
 public class FletchingCraftRecipe implements FletchingRecipe {
-    final Ingredient base;
-    final Ingredient addition;
+    final CountedIngredient base;
+    final CountedIngredient addition;
     final ItemStack result;
 
-    public FletchingCraftRecipe(Ingredient base, Ingredient addition, ItemStack result) {
+    public FletchingCraftRecipe(CountedIngredient base, CountedIngredient addition, ItemStack result) {
         this.base = base;
         this.addition = addition;
         this.result = result;
@@ -60,7 +60,7 @@ public class FletchingCraftRecipe implements FletchingRecipe {
 
     @Override
     public boolean isEmpty() {
-        return Stream.of(this.base, this.addition).anyMatch(Ingredient::isEmpty);
+        return Stream.of(this.base, this.addition).anyMatch(CountedIngredient::isEmpty);
     }
 
     public static class Serializer implements RecipeSerializer<FletchingCraftRecipe> {
@@ -73,8 +73,8 @@ public class FletchingCraftRecipe implements FletchingRecipe {
 
         private static final MapCodec<FletchingCraftRecipe> CODEC = RecordCodecBuilder.mapCodec(
                 instance -> instance.group(
-                                Ingredient.ALLOW_EMPTY_CODEC.fieldOf("base").forGetter(recipe -> recipe.base),
-                                Ingredient.ALLOW_EMPTY_CODEC.fieldOf("addition").forGetter(recipe -> recipe.addition),
+                                CountedIngredient.CODEC.fieldOf("base").forGetter(recipe -> recipe.base),
+                                CountedIngredient.CODEC.fieldOf("addition").forGetter(recipe -> recipe.addition),
                                 ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(recipe -> recipe.result)
                         )
                         .apply(instance, FletchingCraftRecipe::new)
@@ -94,15 +94,15 @@ public class FletchingCraftRecipe implements FletchingRecipe {
         }
 
         private static FletchingCraftRecipe read(RegistryByteBuf buf) {
-            Ingredient ingredient2 = Ingredient.PACKET_CODEC.decode(buf);
-            Ingredient ingredient3 = Ingredient.PACKET_CODEC.decode(buf);
+            CountedIngredient ingredient2 = CountedIngredient.PACKET_CODEC.decode(buf);
+            CountedIngredient ingredient3 = CountedIngredient.PACKET_CODEC.decode(buf);
             ItemStack itemStack = ItemStack.PACKET_CODEC.decode(buf);
             return new FletchingCraftRecipe(ingredient2, ingredient3, itemStack);
         }
 
         private static void write(RegistryByteBuf buf, FletchingCraftRecipe recipe) {
-            Ingredient.PACKET_CODEC.encode(buf, recipe.base);
-            Ingredient.PACKET_CODEC.encode(buf, recipe.addition);
+            CountedIngredient.PACKET_CODEC.encode(buf, recipe.base);
+            CountedIngredient.PACKET_CODEC.encode(buf, recipe.addition);
             ItemStack.PACKET_CODEC.encode(buf, recipe.result);
         }
     }

@@ -1,3 +1,6 @@
 accessWidener v2 named
+
 accessible class net/minecraft/client/gui/hud/InGameHud$HeartType
-accessible method net/minecraft/entity/projectile/AbstractWindChargeEntity <init> (Lnet/minecraft/entity/EntityType;DDDLnet/minecraft/util/math/Vec3d;Lnet/minecraft/world/World;)V
+
+accessible class net/minecraft/recipe/Ingredient$StackEntry
+accessible class net/minecraft/recipe/Ingredient$TagEntry

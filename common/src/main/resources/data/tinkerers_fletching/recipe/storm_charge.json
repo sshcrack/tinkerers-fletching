@@ -1,10 +1,16 @@
 {
   "base": {
-    "item": "minecraft:wind_charge",
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:wind_charge"
+    },
     "count": 4
   },
   "addition": {
-    "item": "minecraft:wind_charge",
+    "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "ingredient": {
+      "item": "minecraft:wind_charge"
+    },
     "count": 4
   },
   "result": {

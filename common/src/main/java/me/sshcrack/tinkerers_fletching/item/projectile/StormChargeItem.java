@@ -5,7 +5,6 @@ import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.block.DispenserBlock;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.WindChargeEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ProjectileItem;
@@ -13,7 +12,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
@@ -40,7 +38,8 @@ public class StormChargeItem extends FletchingItem implements ProjectileItem {
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient()) {
             StormChargeEntity entity = new StormChargeEntity(user, world, user.getPos().getX(), user.getEyePos().getY(), user.getPos().getZ());
-            entity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 1.5f, 1.0f);
+            //entity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 0.001f, 1.0f);
+            entity.setVelocity(0.001, 0, 0.001);
             world.spawnEntity(entity);
         }
 

@@ -1,9 +1,10 @@
 package me.sshcrack.tinkerers_fletching.fabric;
 
-import dev.architectury.platform.Platform;
+import me.sshcrack.tinkerers_fletching.recipe.CountedIngredient;
 import net.fabricmc.api.ModInitializer;
 
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 
 public final class TinkerersModFabric implements ModInitializer {
     @Override
@@ -15,5 +16,6 @@ public final class TinkerersModFabric implements ModInitializer {
 
         // Run our common setup.
         TinkerersMod.init();
+        CustomIngredientSerializer.register(CountedIngredient.SERIALIZER);
     }
 }
