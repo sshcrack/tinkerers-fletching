@@ -15,7 +15,7 @@
     }
   },
   "result": {
-    "id": "minecraft:arrow",
+    "id": "tinkerers_fletching:tiered_arrow",
     "count": 64
   },
   "type": "tinkerers_fletching:fletching_craft"

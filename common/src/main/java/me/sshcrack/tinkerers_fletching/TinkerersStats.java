@@ -1,7 +1,5 @@
 package me.sshcrack.tinkerers_fletching;
 
-import me.sshcrack.tinkerers_fletching.registries.GeneralRegister;
-import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.stat.StatFormatter;
 import net.minecraft.stat.Stats;

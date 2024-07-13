@@ -19,7 +19,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 
-public class StormChargeItem extends FletchingItem implements ProjectileItem {
+public class StormChargeItem extends Item implements ProjectileItem, FletchingItem {
     public StormChargeItem() {
         super(new Item.Settings());
     }
@@ -30,16 +30,20 @@ public class StormChargeItem extends FletchingItem implements ProjectileItem {
     }
 
     @Override
-    public int getPower() {
+    public int getPower(ItemStack stack) {
         return 5;
+    }
+
+    @Override
+    public Item getItem() {
+        return this;
     }
 
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient()) {
             StormChargeEntity entity = new StormChargeEntity(user, world, user.getPos().getX(), user.getEyePos().getY(), user.getPos().getZ());
-            //entity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 0.001f, 1.0f);
-            entity.setVelocity(0.001, 0, 0.001);
+            entity.setVelocity(user, user.getPitch(), user.getYaw(), 0.0f, 0.3f, 1.0f);
             world.spawnEntity(entity);
         }
 

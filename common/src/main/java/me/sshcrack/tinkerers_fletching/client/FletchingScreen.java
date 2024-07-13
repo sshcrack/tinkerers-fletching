@@ -10,19 +10,12 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.gui.screen.ingame.CyclingSlotIcon;
 import net.minecraft.client.gui.screen.ingame.ForgingScreen;
-import net.minecraft.client.texture.Scaling;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,7 +40,7 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
 
     private final FletchingRecipeBookScreen recipeBook;
     @Nullable
-    private FletchingItem resItem;
+    private ItemStack resItem;
 
     public FletchingScreen(FletchingScreenHandler handler, PlayerInventory playerInventory, Text title) {
         super(handler, playerInventory, title, Identifier.of(TinkerersMod.MOD_ID, "textures/gui/container/fletching.png"));
@@ -101,17 +94,18 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
             var yPos = 22;
 
             var size = 55;
-            if (resItem.getBaseTexture() != null) {
-                context.drawGuiTexture(resItem.getBaseTexture(), this.x + xPos, this.y + yPos, size, size);
+            var item = (FletchingItem) this.resItem.getItem();
+            if (item.getBaseTexture() != null) {
+                context.drawGuiTexture(item.getBaseTexture(), this.x + xPos, this.y + yPos, size, size);
             }
-            context.drawGuiTexture(resItem.getResultTexture(), this.x + xPos, this.y + yPos, size, size);
+            context.drawGuiTexture(item.getResultTexture(), this.x + xPos, this.y + yPos, size, size);
 
             context.drawText(this.textRenderer, POWER_TEXT, this.x + 44, this.y + 15, 0x8b898a, false);
-            renderHealthBar(context, this.x + 77, this.y + 15, 6, resItem.getPower());
+            renderHealthBar(context, this.x + 77, this.y + 15, 6, item.getPower(resItem));
 
             context.drawText(this.textRenderer, SPEED_TEXT, this.x + 44, this.y + 35, 0x8b898a, false);
 
-            context.drawGuiTexture(resItem.getSpeedLevel().getTexture(), this.x + 77, this.y + 35 - 8, 16, 16);
+            context.drawGuiTexture(item.getSpeedLevel().getTexture(), this.x + 77, this.y + 35 - 8, 16, 16);
         }
 
         this.renderSlotTooltip(context, mouseX, mouseY);
@@ -129,12 +123,12 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     public void onSlotUpdate(ScreenHandler handler, int slotId, ItemStack stack) {
         if (slotId != 3)
             return;
-        if (!(stack.getItem() instanceof FletchingItem fletchingItem)) {
+        if (!(stack.getItem() instanceof FletchingItem)) {
             resItem = null;
             return;
         }
 
-        resItem = fletchingItem;
+        resItem = stack;
     }
 
     @Override

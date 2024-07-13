@@ -3,6 +3,7 @@ package me.sshcrack.tinkerers_fletching.entity;
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.TinkerersItems;
 import me.sshcrack.tinkerers_fletching.mixin.PersistentProjectileEntityAccessor;
+import net.minecraft.client.particle.SpitParticle;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.data.DataTracker;
@@ -13,6 +14,10 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleEffect;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.world.World;
@@ -52,6 +57,22 @@ public class IceSpikeEntity extends PersistentProjectileEntity {
         if (hitResult.getType() == HitResult.Type.MISS)
             return;
 
-        ((PersistentProjectileEntityAccessor) this).tinkerers$setLife(1200 - 20 + random.nextInt(10));
+        ((PersistentProjectileEntityAccessor) this).tinkerers$setLife(1200 - random.nextInt(3));
+    }
+
+    @Override
+    protected SoundEvent getHitSound() {
+        return SoundEvents.BLOCK_GLASS_BREAK;
+    }
+
+    @Override
+    public void onRemoved() {
+        if (!getWorld().isClient)
+            return;
+
+        var magnitude = 0.1f;
+        var x = random.nextFloat() * magnitude + getX();
+        var z = random.nextFloat() * magnitude + getZ();
+        getWorld().addImportantParticle(ParticleTypes.SPIT, x, getY(), z, 0, 0, 0);
     }
 }

@@ -5,6 +5,8 @@ import me.sshcrack.tinkerers_fletching.TinkerersItems;
 import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
 public class HugeSnowballEntity extends BaseSnowballEntity {
@@ -21,12 +23,12 @@ public class HugeSnowballEntity extends BaseSnowballEntity {
     }
 
     @Override
-    protected FletchingItem getDefaultItem() {
+    protected Item getDefaultItem() {
         return TinkerersItems.HUGE_SNOWBALL.get();
     }
 
     @Override
     public int getDamage() {
-        return getDefaultItem().getPower();
+        return ((FletchingItem) getDefaultItem()).getPower();
     }
 }

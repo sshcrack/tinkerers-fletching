@@ -2,26 +2,27 @@ package me.sshcrack.tinkerers_fletching.item;
 
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class FletchingItem extends Item {
-    public FletchingItem(Settings settings) {
-        super(settings);
-    }
+public interface FletchingItem {
+    SpeedLevel getSpeedLevel();
 
-    public abstract SpeedLevel getSpeedLevel();
+    default int getPower() {
+        return getPower(ItemStack.EMPTY);
+    }
 
     /**
      * Power has to be between 1 and 6 inclusive.
      *
      * @return the power of this item
      */
-    public abstract int getPower();
+    int getPower(ItemStack stack);
 
-    public enum SpeedLevel {
+    enum SpeedLevel {
         SLOW(Identifier.of(TinkerersMod.MOD_ID, "container/fletching/speed/slow")),
         NORMAL(Identifier.of(TinkerersMod.MOD_ID, "container/fletching/speed/normal")),
         FAST(Identifier.of(TinkerersMod.MOD_ID, "container/fletching/speed/fast")),
@@ -39,13 +40,15 @@ public abstract class FletchingItem extends Item {
     }
 
     @Nullable
-    public Identifier getBaseTexture() {
+    default Identifier getBaseTexture() {
         return Identifier.of(TinkerersMod.MOD_ID, "container/fletching/result/overworld");
     }
 
+    Item getItem();
+
     @NotNull
-    public Identifier getResultTexture() {
-        var itemName = Registries.ITEM.getId(this).getPath();
+    default Identifier getResultTexture() {
+        var itemName = Registries.ITEM.getId(getItem()).getPath();
 
         return Identifier.of(TinkerersMod.MOD_ID, "container/fletching/result/item/" + itemName);
     }

@@ -17,11 +17,13 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.*;
+import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.AdvancedExplosionBehavior;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -32,14 +34,17 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
     public StormChargeEntity(PlayerEntity player, World world, double x, double y, double z) {
         super(TinkerersEntities.STORM_CHARGE.get(), x, y, z, world);
         this.setOwner(player);
+        accelerationPower = 0;
     }
 
     public StormChargeEntity(World world, double x, double y, double z, Vec3d velocity) {
         super(TinkerersEntities.STORM_CHARGE.get(), x, y, z, velocity, world);
+        accelerationPower = 0;
     }
 
     public StormChargeEntity(EntityType<? extends ExplosiveProjectileEntity> entityType, World world) {
         super(entityType, world);
+        accelerationPower = 0;
     }
 
     @Override
@@ -91,33 +96,8 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
     }
 
     @Override
-    protected void onBlockHit(BlockHitResult blockHitResult) {
-        super.onBlockHit(blockHitResult);
-        if (this.getWorld().isClient)
-            return;
-
-        if (blockHitResult.getSide() == Direction.UP) {
-            return;
-        }
-/* calc, don't use for now
-        Vec3i sideDirectionVec = blockHitResult.getSide().getVector();
-        Vec3d middleVec = Vec3d.of(sideDirectionVec).multiply(0.25, 0.25, 0.25);
-        Vec3d middlePos = blockHitResult.getPos().add(middleVec);
-*/
-        //this.discard();
-    }
-
-    @Override
     protected double getGravity() {
         return 0.08;
-    }
-
-    @Override
-    protected void onCollision(HitResult hitResult) {
-        super.onCollision(hitResult);
-        if (!this.getWorld().isClient) {
-            //this.discard();
-        }
     }
 
     @Override
@@ -127,12 +107,6 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
 
     @Override
     public void tick() {
-        var world = getWorld();
-        if (!world.isClient && this.getBlockY() > world.getTopY() + 30) {
-            this.discard();
-            return;
-        }
-
         super.tick();
 
         this.prevX = this.getX();
@@ -143,24 +117,23 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
         } else {
             this.applyGravity();
         }
-        if (world.getFluidState(this.getBlockPos()).isIn(FluidTags.LAVA)) {
+        if (this.getWorld().getFluidState(this.getBlockPos()).isIn(FluidTags.LAVA)) {
             this.setVelocity((this.random.nextFloat() - this.random.nextFloat()) * 0.2f, 0.2f, (this.random.nextFloat() - this.random.nextFloat()) * 0.2f);
         }
 
+        var v = getVelocity().multiply(2);
+        if (Math.abs(v.x) < 0.1 && Math.abs(v.z) < 0.1 && !getWorld().isClient) {
+            this.discard();
+            return;
+        }
 
-        var v = getVelocity();
-        var futurePos = getPos().add(v.x, 0, v.z);
-        var futureBlockPos = new BlockPos((int) futurePos.x, (int) futurePos.y, (int) futurePos.z);
-        var futureBlock = world.getBlockState(futureBlockPos);
-        if (futureBlock.isFullCube(world, futureBlockPos)) {
-            var aboveBlock = world.getBlockState(futureBlockPos.up());
-            if (!aboveBlock.isFullCube(world, futureBlockPos.up())) {
-                //addVelocity(0, 0.4, 0);
-            }
+        Box box = this.getBoundingBox();
+        Iterable<VoxelShape> list = this.getWorld().getBlockCollisions(this, box.stretch(v.x, 0, v.z));
+        if (list.iterator().hasNext()) {
+            addVelocity(0, 0.3, 0);
         }
 
         this.move(MovementType.SELF, this.getVelocity());
-        setVelocity(getVelocity().multiply(0.7));
     }
 
     private void applyWaterMovement() {
@@ -178,6 +151,7 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
     }
 
     protected void pushEntitiesUp(Entity hitEntity, Vec3d pos) {
+        hitEntity.addVelocity(0.3 * random.nextFloat(), 0.5 + 0.2 * random.nextFloat(), 0.3 * random.nextFloat());
         this.getWorld().createExplosion(this, null, EXPLOSION_BEHAVIOR, pos.getX(), pos.getY(), pos.getZ(), EXPLOSION_POWER, false, World.ExplosionSourceType.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.ENTITY_WIND_CHARGE_WIND_BURST);
     }
 
@@ -187,6 +161,5 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
         float vZ = MathHelper.cos(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
 
         this.setVelocity(vX, vY, vZ, speed, divergence);
-        setVelocity(getVelocity().multiply(0.5 * 0.5));
     }
 }

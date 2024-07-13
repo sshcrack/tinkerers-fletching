@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "tinkerers_fletching:item/speedo_pearl"
+    "layer0": "tinkerers_fletching:item/rocket_pearl"
   }
 }

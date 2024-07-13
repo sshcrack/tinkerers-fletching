@@ -1,11 +1,9 @@
 package me.sshcrack.tinkerers_fletching.item.projectile;
 
-import me.sshcrack.tinkerers_fletching.entity.HugeSnowballEntity;
 import me.sshcrack.tinkerers_fletching.entity.IronEggEntity;
 import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.entity.projectile.thrown.EggEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ProjectileItem;
@@ -18,7 +16,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 
-public class IronEggItem extends FletchingItem implements ProjectileItem {
+public class IronEggItem extends Item implements ProjectileItem, FletchingItem {
     public IronEggItem() {
         super(new Item.Settings());
     }
@@ -29,8 +27,13 @@ public class IronEggItem extends FletchingItem implements ProjectileItem {
     }
 
     @Override
-    public int getPower() {
+    public int getPower(ItemStack stack) {
         return 6;
+    }
+
+    @Override
+    public Item getItem() {
+        return this;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {

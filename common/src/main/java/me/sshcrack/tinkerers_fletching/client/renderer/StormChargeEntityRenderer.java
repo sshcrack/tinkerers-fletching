@@ -37,6 +37,7 @@ public class StormChargeEntityRenderer extends EntityRenderer<StormChargeEntity>
     public void render(StormChargeEntity entity, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(entity, yaw, tickDelta, matrices, vertexConsumers, light);
         matrices.push();
+        matrices.scale(2, 2, 2);
         matrices.multiply(RotationAxis.NEGATIVE_Z.rotationDegrees(180));
         matrices.translate(0.0D, -1.5d, 0.0D);
 

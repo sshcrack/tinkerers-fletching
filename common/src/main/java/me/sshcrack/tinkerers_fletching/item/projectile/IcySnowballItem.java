@@ -16,7 +16,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 
-public class IcySnowballItem extends FletchingItem implements ProjectileItem {
+public class IcySnowballItem extends Item implements ProjectileItem, FletchingItem {
     public IcySnowballItem() {
         super(new Item.Settings()
                 .maxCount(16));
@@ -28,8 +28,13 @@ public class IcySnowballItem extends FletchingItem implements ProjectileItem {
     }
 
     @Override
-    public int getPower() {
+    public int getPower(ItemStack stack) {
         return 3;
+    }
+
+    @Override
+    public Item getItem() {
+        return this;
     }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {

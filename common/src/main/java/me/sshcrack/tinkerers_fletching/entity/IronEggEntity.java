@@ -2,16 +2,13 @@ package me.sshcrack.tinkerers_fletching.entity;
 
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.TinkerersItems;
-import net.minecraft.entity.EntityDimensions;
+import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.entity.EntityStatuses;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.passive.ChickenEntity;
-import net.minecraft.entity.projectile.thrown.EggEntity;
-import net.minecraft.entity.projectile.thrown.SnowballEntity;
 import net.minecraft.entity.projectile.thrown.ThrownItemEntity;
 import net.minecraft.item.Item;
-import net.minecraft.item.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.sound.SoundCategory;
@@ -46,7 +43,7 @@ public class IronEggEntity extends ThrownItemEntity {
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        entityHitResult.getEntity().damage(this.getDamageSources().thrown(this, this.getOwner()), 1.0f);
+        entityHitResult.getEntity().damage(this.getDamageSources().thrown(this, this.getOwner()), ((FletchingItem) getDefaultItem()).getPower());
     }
 
     @Override
@@ -57,6 +54,7 @@ public class IronEggEntity extends ThrownItemEntity {
             this.discard();
         }
     }
+
 
     @Override
     protected Item getDefaultItem() {

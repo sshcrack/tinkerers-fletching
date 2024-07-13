@@ -3,6 +3,7 @@ package me.sshcrack.tinkerers_fletching.recipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
+import me.sshcrack.tinkerers_fletching.item.projectile.tiered.ArrowTier;
 import me.sshcrack.tinkerers_fletching.recipe.custom.ArchCustomIngredient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
@@ -13,6 +14,7 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class FletchingCraftRecipe implements FletchingRecipe {

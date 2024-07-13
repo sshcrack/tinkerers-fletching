@@ -35,7 +35,7 @@ public abstract class BaseSnowballEntity extends ThrownItemEntity {
         super(entityType, x, y, z, world);
     }
 
-    protected abstract FletchingItem getDefaultItem();
+    protected abstract Item getDefaultItem();
 
     protected ParticleEffect getParticleParameters() {
         ItemStack itemStack = this.getStack();
