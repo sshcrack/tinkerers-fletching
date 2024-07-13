@@ -1,10 +1,9 @@
-package me.sshcrack.tinkerers_fletching.recipe.custom.fabric;
+package me.sshcrack.tinkerers_fletching.fabric.recipe;
 
 import me.sshcrack.tinkerers_fletching.recipe.custom.ArchCustomIngredient;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredient;
 import net.fabricmc.fabric.api.recipe.v1.ingredient.CustomIngredientSerializer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
 
 import java.util.List;
 
@@ -39,7 +38,7 @@ public class CustomIngredientWrapper implements CustomIngredient {
         return CustomIngredientSerializerWrapper.of(ingredient.getSerializer());
     }
 
-    public ArchCustomIngredient getUnderylingIngredient() {
+    public ArchCustomIngredient getUnderlyingIngredient() {
         return this.ingredient;
     }
 }

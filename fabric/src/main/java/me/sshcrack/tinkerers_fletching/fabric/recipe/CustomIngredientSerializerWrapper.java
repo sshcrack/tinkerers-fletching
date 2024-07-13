@@ -1,4 +1,4 @@
-package me.sshcrack.tinkerers_fletching.recipe.custom.fabric;
+package me.sshcrack.tinkerers_fletching.fabric.recipe;
 
 import com.mojang.serialization.MapCodec;
 import me.sshcrack.tinkerers_fletching.recipe.custom.ArchCustomIngredient;
@@ -14,20 +14,13 @@ public class CustomIngredientSerializerWrapper implements CustomIngredientSerial
 
     private CustomIngredientSerializerWrapper(ArchCustomIngredientSerializer<ArchCustomIngredient> serializer) {
         this.serializer = serializer;
-        this.packetCodec = new PacketCodec<>() {
-            @Override
-            public CustomIngredientWrapper decode(RegistryByteBuf buf) {
-                return CustomIngredientWrapper.of(serializer.getPacketCodec().decode(buf));
-            }
-
-            @Override
-            public void encode(RegistryByteBuf buf, CustomIngredientWrapper value) {
-                serializer.getPacketCodec().encode(buf, value.getUnderylingIngredient());
-            }
-        };
+        this.packetCodec = serializer.getPacketCodec()
+                .xmap(CustomIngredientWrapper::of, CustomIngredientWrapper::getUnderlyingIngredient);
     }
 
     public static CustomIngredientSerializerWrapper of(ArchCustomIngredientSerializer<?> serializer) {
+        // Should work I guess
+        //noinspection unchecked
         return new CustomIngredientSerializerWrapper((ArchCustomIngredientSerializer<ArchCustomIngredient>) serializer);
     }
 
@@ -40,7 +33,7 @@ public class CustomIngredientSerializerWrapper implements CustomIngredientSerial
     public MapCodec<CustomIngredientWrapper> getCodec(boolean allowEmpty) {
         //TODO Optimize by caching
         return serializer.getCodec(allowEmpty)
-                .xmap(CustomIngredientWrapper::of, CustomIngredientWrapper::getUnderylingIngredient);
+                .xmap(CustomIngredientWrapper::of, CustomIngredientWrapper::getUnderlyingIngredient);
     }
 
     @Override

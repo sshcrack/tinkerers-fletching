@@ -10,16 +10,18 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
+import java.util.function.Supplier;
+
 public class TinkerersItems {
-    public static RegistrySupplier<StormChargeItem> STORM_CHARGE = register("storm_charge", new StormChargeItem());
+    public static RegistrySupplier<StormChargeItem> STORM_CHARGE = register("storm_charge", StormChargeItem::new);
 
-    public static RegistrySupplier<BigSnowballItem> BIG_SNOWBALL = register("big_snowball", new BigSnowballItem());
-    public static RegistrySupplier<HugeSnowballItem> HUGE_SNOWBALL = register("huge_snowball", new HugeSnowballItem());
-    public static RegistrySupplier<IcySnowballItem> ICY_SNOWBALL = register("icy_snowball", new IcySnowballItem());
+    public static RegistrySupplier<BigSnowballItem> BIG_SNOWBALL = register("big_snowball", BigSnowballItem::new);
+    public static RegistrySupplier<HugeSnowballItem> HUGE_SNOWBALL = register("huge_snowball", HugeSnowballItem::new);
+    public static RegistrySupplier<IcySnowballItem> ICY_SNOWBALL = register("icy_snowball", IcySnowballItem::new);
 
-    public static RegistrySupplier<IronEggItem> IRON_EGG = register("iron_egg", new IronEggItem());
+    public static RegistrySupplier<IronEggItem> IRON_EGG = register("iron_egg", IronEggItem::new);
 
-    private static <T extends Item> RegistrySupplier<T> register(String name, T item) {
+    private static <T extends Item> RegistrySupplier<T> register(String name, Supplier<T> item) {
         return TinkerersMod.register(RegistryKeys.ITEM, Identifier.of(TinkerersMod.MOD_ID, name), item);
     }
 

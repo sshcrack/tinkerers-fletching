@@ -16,6 +16,7 @@
 
 package me.sshcrack.tinkerers_fletching.recipe.custom;
 
+import me.sshcrack.tinkerers_fletching.registries.ArchCustomIngredientSerializerRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;

@@ -1,12 +1,14 @@
 {
   "base": {
     "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "type": "tinkerers_fletching:counted_ingredient",
     "ingredient": {
       "item": "minecraft:ender_pearl"
     }
   },
   "addition": {
     "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "type": "tinkerers_fletching:counted_ingredient",
     "ingredient": {
       "item": "minecraft:firework_rocket"
     },

@@ -2,6 +2,7 @@
   "type": "tinkerers_fletching:fletching_transform",
   "addition": {
     "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "type": "tinkerers_fletching:counted_ingredient",
     "ingredient": {
       "item": "minecraft:netherite_ingot"
     },
@@ -9,6 +10,7 @@
   },
   "base": {
     "fabric:type": "tinkerers_fletching:counted_ingredient",
+    "type": "tinkerers_fletching:counted_ingredient",
     "ingredient": {
       "item": "minecraft:trident"
     }

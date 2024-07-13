@@ -1,8 +1,9 @@
-package me.sshcrack.tinkerers_fletching.client.screen_register.fabric;
+package me.sshcrack.tinkerers_fletching.client.registries.fabric;
 
 import dev.architectury.registry.menu.MenuRegistry;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import me.sshcrack.tinkerers_fletching.client.FletchingScreen;
+import net.fabricmc.fabric.api.object.builder.v1.entity.FabricEntityTypeBuilder;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;

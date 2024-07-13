@@ -1,6 +1,7 @@
-package me.sshcrack.tinkerers_fletching.recipe.custom;
+package me.sshcrack.tinkerers_fletching.registries;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import me.sshcrack.tinkerers_fletching.recipe.custom.ArchCustomIngredientSerializer;
 
 public class ArchCustomIngredientSerializerRegistry {
     @ExpectPlatform

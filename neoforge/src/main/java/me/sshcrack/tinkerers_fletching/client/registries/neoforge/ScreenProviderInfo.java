@@ -1,4 +1,4 @@
-package me.sshcrack.tinkerers_fletching.client.screen_register.neoforge;
+package me.sshcrack.tinkerers_fletching.client.registries.neoforge;
 
 import dev.architectury.registry.menu.MenuRegistry;
 import net.minecraft.client.gui.screen.Screen;

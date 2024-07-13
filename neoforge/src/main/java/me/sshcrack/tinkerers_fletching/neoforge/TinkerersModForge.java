@@ -1,25 +1,30 @@
 package me.sshcrack.tinkerers_fletching.neoforge;
 
-import dev.architectury.registry.menu.MenuRegistry;
+import dev.architectury.platform.hooks.EventBusesHooks;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import me.sshcrack.tinkerers_fletching.client.TinkerersModClient;
-import me.sshcrack.tinkerers_fletching.client.screen_register.neoforge.ScreenRegisterImpl;
+import me.sshcrack.tinkerers_fletching.client.registries.neoforge.ScreenRegisterImpl;
+import me.sshcrack.tinkerers_fletching.entity.StormChargeEntity;
+import me.sshcrack.tinkerers_fletching.registries.GeneralRegister;
+import me.sshcrack.tinkerers_fletching.registries.neoforge.GeneralRegisterImpl;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
+import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.registry.Registries;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import oshi.util.tuples.Pair;
+import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -27,6 +32,9 @@ import java.lang.reflect.InvocationTargetException;
 @Mod(TinkerersMod.MOD_ID)
 public final class TinkerersModForge {
     public static DeferredRegister<ScreenHandlerType<?>> SCREEN_HANDLER = DeferredRegister.create(Registries.SCREEN_HANDLER, TinkerersMod.MOD_ID);
+    public static DeferredRegister<IngredientType<?>> INGREDIENT_TYPE = DeferredRegister.create(NeoForgeRegistries.INGREDIENT_TYPES, TinkerersMod.MOD_ID);
+    public static DeferredRegister<EntityType<?>> ENTITY_TYPE = DeferredRegister.create(Registries.ENTITY_TYPE, TinkerersMod.MOD_ID);
+
 
     public TinkerersModForge(IEventBus eventBus) {
         // Run our common setup.
@@ -35,6 +43,10 @@ public final class TinkerersModForge {
         eventBus.addListener(this::onCommonSetup);
         eventBus.addListener(this::onRegisterScreens);
         SCREEN_HANDLER.register(eventBus);
+        INGREDIENT_TYPE.register(eventBus);
+        ENTITY_TYPE.register(eventBus);
+        GeneralRegisterImpl.initialize(eventBus);
+
         TinkerersMod.init();
     }
 
