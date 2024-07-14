@@ -11,6 +11,8 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
@@ -25,6 +27,7 @@ public class TinkerersItems {
     public final static RegistrySupplier<RocketPearlItem> ROCKET_PEARL = register("rocket_pearl", RocketPearlItem::new);
 
     public final static HashMap<ArrowTier, RegistrySupplier<TieredArrowItem>> TIERED_ARROW = new HashMap<>();
+    public final static RegistrySupplier<TntArrowItem> TNT_ARROW = register("tnt_arrow", TntArrowItem::new);
 
     private static <T extends Item> RegistrySupplier<T> register(String name, Supplier<T> item) {
         return TinkerersMod.register(RegistryKeys.ITEM, Identifier.of(TinkerersMod.MOD_ID, name), item);
@@ -39,6 +42,13 @@ public class TinkerersItems {
 
             output.acceptAfter(Items.EGG, IRON_EGG.get());
             output.acceptAfter(Items.WIND_CHARGE, STORM_CHARGE.get());
+
+            output.acceptAfter(Items.ARROW, TNT_ARROW.get());
+            var items = TIERED_ARROW.values().stream()
+                    .sorted(Comparator.comparingInt(o -> -o.getType().ordinal()))
+                    .map(e -> e.get().getDefaultStack())
+                    .toList();
+            output.acceptAllAfter(Items.ARROW, items);
         });
 
         CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.getOrThrow(ItemGroups.TOOLS), (flags, output, canUseGameMasterBlocks) -> {

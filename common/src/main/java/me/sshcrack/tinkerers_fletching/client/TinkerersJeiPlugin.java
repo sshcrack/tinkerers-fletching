@@ -1,5 +1,6 @@
 package me.sshcrack.tinkerers_fletching.client;
 
+import me.sshcrack.tinkerers_fletching.FletchingScreenHandler;
 import me.sshcrack.tinkerers_fletching.Recipes;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import me.sshcrack.tinkerers_fletching.client.jei.CountedIngredientType;
@@ -61,5 +62,10 @@ public class TinkerersJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(Blocks.FLETCHING_TABLE), RecipeTypesJei.FLETCHING_RECIPE_TYPE);
+    }
+
+    @Override
+    public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        registration.addRecipeTransferHandler(FletchingScreenHandler.class, TinkerersMod.FLETCHING_SCREEN_HANDLER.get(), RecipeTypesJei.FLETCHING_RECIPE_TYPE, 0, 3, 3, 36);
     }
 }
