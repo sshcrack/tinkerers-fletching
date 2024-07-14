@@ -32,11 +32,11 @@ public interface FletchingRecipe extends Recipe<FletchingRecipeInput> {
     boolean testAddition(ItemStack stack);
 
     @Nullable
-    ArchCustomIngredient getTemplateIngredient();
+    CountedIngredient getTemplateIngredient();
 
-    ArchCustomIngredient getBaseIngredient();
+    CountedIngredient getBaseIngredient();
 
-    ArchCustomIngredient getAdditionIngredient();
+    CountedIngredient getAdditionIngredient();
 
     class Type implements RecipeType<FletchingRecipe> {
         private Type() {

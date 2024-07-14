@@ -22,6 +22,7 @@ import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
+    public static final Identifier FLETCHING_TEXTURE = Identifier.of(TinkerersMod.MOD_ID, "textures/gui/container/fletching.png");
     private static final Identifier ERROR_TEXTURE = Identifier.ofVanilla("container/smithing/error");
     private static final Identifier EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE_TEXTURE = Identifier.ofVanilla(
             "item/empty_slot_smithing_template_netherite_upgrade"
@@ -43,7 +44,7 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
     private ItemStack resItem;
 
     public FletchingScreen(FletchingScreenHandler handler, PlayerInventory playerInventory, Text title) {
-        super(handler, playerInventory, title, Identifier.of(TinkerersMod.MOD_ID, "textures/gui/container/fletching.png"));
+        super(handler, playerInventory, title, FLETCHING_TEXTURE);
         this.titleX = 44;
         this.titleY = 4;
 

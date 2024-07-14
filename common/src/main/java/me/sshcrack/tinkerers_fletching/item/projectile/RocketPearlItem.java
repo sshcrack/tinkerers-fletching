@@ -38,10 +38,6 @@ public class RocketPearlItem extends Item implements FletchingItem {
         return null;
     }
 
-    @Override
-    public Item getItem() {
-        return this;
-    }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);

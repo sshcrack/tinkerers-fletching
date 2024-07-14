@@ -32,10 +32,6 @@ public class HugeSnowballItem extends Item implements ProjectileItem, FletchingI
         return 4;
     }
 
-    @Override
-    public Item getItem() {
-        return this;
-    }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);

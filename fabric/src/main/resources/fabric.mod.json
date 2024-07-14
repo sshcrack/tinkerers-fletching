@@ -20,6 +20,9 @@
     ],
     "client": [
       "me.sshcrack.tinkerers_fletching.fabric.client.TinkerersModFabricClient"
+    ],
+    "jei_mod_plugin": [
+      "me.sshcrack.tinkerers_fletching.client.TinkerersJeiPlugin"
     ]
   },
   "mixins": [

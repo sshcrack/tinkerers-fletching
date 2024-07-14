@@ -57,17 +57,17 @@ public class FletchingCraftRecipe implements FletchingRecipe {
     }
 
     @Override
-    public ArchCustomIngredient getTemplateIngredient() {
+    public CountedIngredient getTemplateIngredient() {
         return null;
     }
 
     @Override
-    public ArchCustomIngredient getBaseIngredient() {
+    public CountedIngredient getBaseIngredient() {
         return base;
     }
 
     @Override
-    public ArchCustomIngredient getAdditionIngredient() {
+    public CountedIngredient getAdditionIngredient() {
         return addition;
     }
 

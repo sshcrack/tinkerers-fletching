@@ -61,17 +61,17 @@ public class FletchingTransformRecipe implements FletchingRecipe {
     }
 
     @Override
-    public @Nullable ArchCustomIngredient getTemplateIngredient() {
+    public @Nullable CountedIngredient getTemplateIngredient() {
         return template;
     }
 
     @Override
-    public ArchCustomIngredient getBaseIngredient() {
+    public CountedIngredient getBaseIngredient() {
         return base;
     }
 
     @Override
-    public ArchCustomIngredient getAdditionIngredient() {
+    public CountedIngredient getAdditionIngredient() {
         return addition;
     }
 

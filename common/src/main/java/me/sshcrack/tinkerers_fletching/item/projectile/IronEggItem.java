@@ -31,10 +31,6 @@ public class IronEggItem extends Item implements ProjectileItem, FletchingItem {
         return 6;
     }
 
-    @Override
-    public Item getItem() {
-        return this;
-    }
 
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);

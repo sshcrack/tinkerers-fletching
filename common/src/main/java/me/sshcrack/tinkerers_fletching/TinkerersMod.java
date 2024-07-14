@@ -5,28 +5,16 @@ import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.registry.registries.RegistrySupplier;
-import me.sshcrack.tinkerers_fletching.client.FletchingScreen;
-import me.sshcrack.tinkerers_fletching.client.registries.ScreenRegister;
-import me.sshcrack.tinkerers_fletching.item.projectile.tiered.ArrowTier;
-import net.minecraft.component.ComponentType;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.data.TrackedDataHandler;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.item.Item;
-import net.minecraft.item.ToolMaterials;
-import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.dynamic.Codecs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 public final class TinkerersMod {
     public static final String MOD_ID = "tinkerers_fletching";

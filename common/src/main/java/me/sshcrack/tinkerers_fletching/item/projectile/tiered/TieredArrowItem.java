@@ -33,10 +33,6 @@ public class TieredArrowItem extends ArrowItem implements ProjectileItem, Fletch
         return tier.getPower();
     }
 
-    @Override
-    public Item getItem() {
-        return this;
-    }
 
     @Override
     public PersistentProjectileEntity createArrow(World world, ItemStack stack, LivingEntity shooter, @Nullable ItemStack shotFrom) {
