@@ -15,7 +15,7 @@ import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class TieredArrowItem extends ArrowItem implements ProjectileItem, FletchingItem {
+public class TieredArrowItem extends ArrowItem implements ProjectileItem, FletchingItem {
     private final ArrowTier tier;
 
     public TieredArrowItem(ArrowTier tier) {
@@ -40,12 +40,12 @@ public abstract class TieredArrowItem extends ArrowItem implements ProjectileIte
 
     @Override
     public PersistentProjectileEntity createArrow(World world, ItemStack stack, LivingEntity shooter, @Nullable ItemStack shotFrom) {
-        return new TieredArrowEntity(world, shooter, stack.copyWithCount(1), shotFrom);
+        return new TieredArrowEntity(tier, world, shooter, stack.copyWithCount(1), shotFrom);
     }
 
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
-        TieredArrowEntity tieredEntity = new TieredArrowEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1), null);
+        TieredArrowEntity tieredEntity = new TieredArrowEntity(tier, world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1), null);
         tieredEntity.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
         tieredEntity.setDamage(getPower(stack));
 

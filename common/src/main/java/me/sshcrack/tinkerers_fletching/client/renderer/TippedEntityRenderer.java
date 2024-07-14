@@ -18,4 +18,3 @@ public class TippedEntityRenderer extends ProjectileEntityRenderer<TieredArrowEn
         return arrowEntity.getArrowTier().getTexture();
     }
 }
-

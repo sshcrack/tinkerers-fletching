@@ -10,6 +10,8 @@ import me.sshcrack.tinkerers_fletching.client.registries.ScreenRegister;
 import me.sshcrack.tinkerers_fletching.item.projectile.tiered.ArrowTier;
 import net.minecraft.component.ComponentType;
 import net.minecraft.component.DataComponentTypes;
+import net.minecraft.entity.data.TrackedDataHandler;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.item.Item;
 import net.minecraft.item.ToolMaterials;
 import net.minecraft.network.codec.PacketCodecs;
@@ -32,7 +34,6 @@ public final class TinkerersMod {
     public static final Supplier<RegistrarManager> MANAGER = Suppliers.memoize(() -> RegistrarManager.get(MOD_ID));
 
     public static final RegistrySupplier<ScreenHandlerType<FletchingScreenHandler>> FLETCHING_SCREEN_HANDLER = registerScreenHandler("fletching", FletchingScreenHandler::new);
-    public static final RegistrySupplier<ComponentType<Integer>> ARROW_MATERIAL = registerDataComponent("arrow_material", builder -> builder.codec(Codecs.rangedInt(0, ArrowTier.values().length)).packetCodec(PacketCodecs.VAR_INT));
 
 
     public static final int BASE_WORLD_EVENT = 4170000;
@@ -60,10 +61,6 @@ public final class TinkerersMod {
     private static <T extends ScreenHandler> RegistrySupplier<ScreenHandlerType<T>> registerScreenHandler(String id, ScreenHandlerType.Factory<T> factory) {
         System.out.println("Registering screen handler");
         return register(RegistryKeys.SCREEN_HANDLER, Identifier.of(MOD_ID, id), () -> MenuRegistry.ofExtended((i, inventory, buf) -> factory.create(i, inventory)));
-    }
-
-    private static <T> RegistrySupplier<ComponentType<T>> registerDataComponent(String id, UnaryOperator<ComponentType.Builder<T>> builderOperator) {
-        return register(RegistryKeys.DATA_COMPONENT_TYPE, id, () -> builderOperator.apply(ComponentType.builder()).build());
     }
 
 
