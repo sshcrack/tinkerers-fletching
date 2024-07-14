@@ -3,7 +3,7 @@
   "values": [
     "minecraft:diamond",
     {
-      "id": "#c:diamonds",
+      "id": "c:diamonds",
       "required": false
     }
   ]

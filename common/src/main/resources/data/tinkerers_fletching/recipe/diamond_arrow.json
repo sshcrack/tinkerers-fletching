@@ -11,11 +11,11 @@
     "fabric:type": "tinkerers_fletching:counted_ingredient",
     "type": "tinkerers_fletching:counted_ingredient",
     "ingredient": {
-      "item": "minecraft:diamond"
+      "tag": "c:gems/diamond"
     }
   },
   "result": {
-    "id": "minecraft:arrow",
+    "id": "tinkerers_fletching:diamond_arrow",
     "count": 64
   },
   "type": "tinkerers_fletching:fletching_craft"
