@@ -28,4 +28,14 @@ public enum ArrowTier {
     public double getGravityMultiplier() {
         return gravityMultiplier;
     }
+
+    public static ArrowTier fromId(int id) {
+        for (ArrowTier value : values()) {
+            if (value.ordinal() == id) {
+                return value;
+            }
+        }
+
+        throw new AssertionError();
+    }
 }

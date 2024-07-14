@@ -10,6 +10,7 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,13 +35,21 @@ public class TieredArrowEntity extends PersistentProjectileEntity {
     }
 
     @Nullable
-    public ArrowTier getArrowTier() {
+    public ArrowTier getDataArrowTier() {
         var index = this.dataTracker.get(ARROW_TIER);
         var values = ArrowTier.values();
         if (index == -1 || index >= values.length)
             return null;
 
         return values[index];
+    }
+
+    @Nullable
+    public ArrowTier getCachedArrowTier() {
+        if (cachedArrowTier == null)
+            cachedArrowTier = getDataArrowTier();
+
+        return cachedArrowTier;
     }
 
     @Override
@@ -59,7 +68,7 @@ public class TieredArrowEntity extends PersistentProjectileEntity {
     public void onTrackedDataSet(TrackedData<?> data) {
         super.onTrackedDataSet(data);
         if (ARROW_TIER.equals(data)) {
-            this.cachedArrowTier = getArrowTier();
+            this.cachedArrowTier = getDataArrowTier();
         }
     }
 
@@ -76,5 +85,19 @@ public class TieredArrowEntity extends PersistentProjectileEntity {
             key = ArrowTier.STONE;
 
         return TinkerersItems.TIERED_ARROW.get(key).get().getDefaultStack();
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        dataTracker.set(ARROW_TIER, nbt.getInt("ArrowTier"));
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        var t = getDataArrowTier();
+        if (t != null)
+            nbt.putInt("ArrowTier", t.ordinal());
     }
 }
