@@ -10,7 +10,6 @@ import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 public class TieredArrowEntity extends PersistentProjectileEntity {
     private static final TrackedData<Integer> ARROW_TIER = DataTracker.registerData(TieredArrowEntity.class, TrackedDataHandlerRegistry.INTEGER);
     @Nullable
-    private ArrowTier arrowTier;
+    private ArrowTier cachedArrowTier;
 
     public TieredArrowEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
@@ -44,6 +43,14 @@ public class TieredArrowEntity extends PersistentProjectileEntity {
         return values[index];
     }
 
+    @Override
+    protected double getGravity() {
+        if (cachedArrowTier == null)
+            return super.getGravity();
+
+        return super.getGravity() * cachedArrowTier.getGravityMultiplier();
+    }
+
     public void setArrowTier(@NotNull ArrowTier arrowTier) {
         this.dataTracker.set(ARROW_TIER, arrowTier.ordinal());
     }
@@ -52,7 +59,7 @@ public class TieredArrowEntity extends PersistentProjectileEntity {
     public void onTrackedDataSet(TrackedData<?> data) {
         super.onTrackedDataSet(data);
         if (ARROW_TIER.equals(data)) {
-            this.arrowTier = getArrowTier();
+            this.cachedArrowTier = getArrowTier();
         }
     }
 
@@ -64,6 +71,10 @@ public class TieredArrowEntity extends PersistentProjectileEntity {
 
     @Override
     protected ItemStack getDefaultItemStack() {
-        return TinkerersItems.TIERED_ARROW.get(arrowTier).get().getDefaultStack();
+        var key = cachedArrowTier;
+        if (key == null)
+            key = ArrowTier.STONE;
+
+        return TinkerersItems.TIERED_ARROW.get(key).get().getDefaultStack();
     }
 }

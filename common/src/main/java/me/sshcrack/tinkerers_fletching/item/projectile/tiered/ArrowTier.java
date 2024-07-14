@@ -3,15 +3,17 @@ package me.sshcrack.tinkerers_fletching.item.projectile.tiered;
 import net.minecraft.util.Identifier;
 
 public enum ArrowTier {
-    STONE(4),
-    IRON(3),
-    DIAMOND(2),
-    NETHERITE(1);
+    STONE(4, 1.2),
+    IRON(3, 1.4),
+    DIAMOND(2, 1.6),
+    NETHERITE(1, 1.8);
 
     private final int power;
+    private final double gravityMultiplier;
 
-    ArrowTier(int power) {
+    ArrowTier(int power, double gravityMultiplier) {
         this.power = power;
+        this.gravityMultiplier = gravityMultiplier;
     }
 
 
@@ -21,5 +23,9 @@ public enum ArrowTier {
 
     public Identifier getTexture() {
         return Identifier.of("tinkerers_fletching", "textures/entity/projectiles/" + this.name().toLowerCase() + "_arrow.png");
+    }
+
+    public double getGravityMultiplier() {
+        return gravityMultiplier;
     }
 }

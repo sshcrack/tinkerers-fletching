@@ -12,6 +12,11 @@
   "item.tinkerers_fletching.storm_charge": "Storm Charge",
   "item.tinkerers_fletching.rocket_pearl": "Rocket Pearl",
 
+  "item.tinkerers_fletching.stone_arrow": "Stone Arrow",
+  "item.tinkerers_fletching.iron_arrow": "Item Arrow",
+  "item.tinkerers_fletching.diamond_arrow": "Diamond Arrow",
+  "item.tinkerers_fletching.netherite_arrow": "Netherite Arrow",
+
   "entity.tinkerers_fletching.iron_egg": "Iron Egg",
   "entity.tinkerers_fletching.big_snowball": "Big Snowball",
   "entity.tinkerers_fletching.huge_snowball": "Huge Snowball",

@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "tinkerers_fletching:stone_arrow",
+    "tinkerers_fletching:iron_arrow",
+    "tinkerers_fletching:diamond_arrow",
+    "tinkerers_fletching:netherite_arrow"
+  ]
+}
