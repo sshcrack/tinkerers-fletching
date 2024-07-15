@@ -23,7 +23,9 @@ public class RocketPearlEntity extends EnderPearlEntity {
     @Override
     public void tick() {
         super.tick();
-        getWorld().addParticle(ParticleTypes.FIREWORK, getX(), getY(), getZ(), random.nextGaussian() * 0.05, 0, random.nextGaussian() * 0.05);
+
+        if (getWorld().isClient)
+            getWorld().addParticle(ParticleTypes.FIREWORK, getX(), getY(), getZ(), random.nextGaussian() * 0.05, 0, random.nextGaussian() * 0.05);
     }
 
     @Override

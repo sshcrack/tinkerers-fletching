@@ -5,6 +5,7 @@ import me.sshcrack.tinkerers_fletching.client.registries.EntityRendererRegister;
 import me.sshcrack.tinkerers_fletching.client.renderer.IceSpikeEntityRenderer;
 import me.sshcrack.tinkerers_fletching.client.renderer.StormChargeEntityRenderer;
 import me.sshcrack.tinkerers_fletching.client.renderer.TippedEntityRenderer;
+import me.sshcrack.tinkerers_fletching.client.renderer.TntArrowEntityRenderer;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 
 public class TinkerersEntitiesClient {
@@ -19,5 +20,6 @@ public class TinkerersEntitiesClient {
         EntityRendererRegister.register(TinkerersEntities.STORM_CHARGE, StormChargeEntityRenderer::new);
 
         EntityRendererRegister.register(TinkerersEntities.TIERED_ARROW, TippedEntityRenderer::new);
+        EntityRendererRegister.register(TinkerersEntities.TNT_ARROW, TntArrowEntityRenderer::new);
     }
 }

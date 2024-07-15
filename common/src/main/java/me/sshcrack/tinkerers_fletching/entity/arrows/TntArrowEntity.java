@@ -2,16 +2,17 @@ package me.sshcrack.tinkerers_fletching.entity.arrows;
 
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.TinkerersItems;
-import me.sshcrack.tinkerers_fletching.item.projectile.tiered.ArrowTier;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.TntEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
@@ -71,12 +72,29 @@ public class TntArrowEntity extends PersistentProjectileEntity {
     }
 
     @Override
-    protected void onCollision(HitResult hitResult) {
-        super.onCollision(hitResult);
+    protected void onBlockHit(BlockHitResult blockHitResult) {
+        super.onBlockHit(blockHitResult);
 
-        if (hitResult.getType() == HitResult.Type.MISS)
-            return;
+        if (!getWorld().isClient)
+            this.getWorld().createExplosion(this, Explosion.createDamageSource(this.getWorld(), this), this.teleported ? TELEPORTED_EXPLOSION_BEHAVIOR : null, this.getX(), this.getBodyY(0.0625), this.getZ(), 1.0F, false, World.ExplosionSourceType.TNT);
+        this.discard();
+    }
 
-        this.getWorld().createExplosion(this, Explosion.createDamageSource(this.getWorld(), this), this.teleported ? TELEPORTED_EXPLOSION_BEHAVIOR : null, this.getX(), this.getBodyY(0.0625), this.getZ(), 1.0F, false, World.ExplosionSourceType.TNT);
+    @Override
+    protected void onEntityHit(EntityHitResult entityHitResult) {
+        var prev = isRemoved();
+        super.onEntityHit(entityHitResult);
+
+        if (isRemoved() && !prev) {
+            if (!getWorld().isClient)
+                this.getWorld().createExplosion(this, Explosion.createDamageSource(this.getWorld(), this), this.teleported ? TELEPORTED_EXPLOSION_BEHAVIOR : null, this.getX(), this.getBodyY(0.0625), this.getZ(), 1.0F, false, World.ExplosionSourceType.TNT);
+        }
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (getWorld().isClient)
+            getWorld().addParticle(ParticleTypes.SMOKE, getX(), getY(), getZ(), random.nextGaussian() * 0.05, 0, random.nextGaussian() * 0.05);
     }
 }
