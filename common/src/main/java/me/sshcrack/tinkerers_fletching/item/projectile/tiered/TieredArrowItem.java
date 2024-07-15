@@ -1,6 +1,5 @@
 package me.sshcrack.tinkerers_fletching.item.projectile.tiered;
 
-import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import me.sshcrack.tinkerers_fletching.entity.arrows.TieredArrowEntity;
 import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.entity.LivingEntity;

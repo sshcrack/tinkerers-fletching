@@ -12,9 +12,15 @@ dependencies {
     modImplementation "dev.architectury:architectury:$rootProject.architectury_api_version"
 
 
-    // Just use the runtime fat jar because the common module is straight up scuffed
-    modImplementation("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
-        exclude(group: "mezz.jei")
+    if (rootProject.disable_jei == "false") {
+        // Just use the runtime fat jar because the common module is straight up scuffed
+        modImplementation("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
+            exclude(group: "mezz.jei")
+        }
+    } else {
+        modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
+            exclude(group: "mezz.jei")
+        }
     }
 }
 

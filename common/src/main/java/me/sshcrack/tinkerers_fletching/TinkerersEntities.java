@@ -3,6 +3,7 @@ package me.sshcrack.tinkerers_fletching;
 import me.sshcrack.tinkerers_fletching.entity.*;
 import me.sshcrack.tinkerers_fletching.entity.RocketPearlEntity;
 import me.sshcrack.tinkerers_fletching.entity.arrows.TieredArrowEntity;
+import me.sshcrack.tinkerers_fletching.entity.arrows.TntArrowEntity;
 import me.sshcrack.tinkerers_fletching.registries.EntityTypeRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -24,6 +25,7 @@ public class TinkerersEntities {
     public static final Supplier<EntityType<RocketPearlEntity>> ROCKET_PEARL = register("rocket_pearl", RocketPearlEntity::new, b -> b.dimensions(0.25F, 0.25F).maxTrackingRange(4).trackingTickInterval(10));
 
     public static final Supplier<EntityType<TieredArrowEntity>> TIERED_ARROW = register("tiered_arrow", TieredArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
+    public static final Supplier<EntityType<TntArrowEntity>> TNT_ARROW = register("tnt_arrow", TntArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
 
 
     private static <T extends Entity> Supplier<EntityType<T>> register(String name, EntityType.EntityFactory<T> factory, Consumer<EntityType.Builder<T>> configureBuilder) {

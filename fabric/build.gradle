@@ -41,9 +41,15 @@ dependencies {
     common(project(path: ':common', configuration: 'namedElements')) { transitive false }
     shadowBundle project(path: ':common', configuration: 'transformProductionFabric')
 
-    // Just use the runtime fat jar because the common module is straight up scuffed
-    modImplementation("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
-        exclude(group: "mezz.jei")
+    if (rootProject.disable_jei == "false") {
+        // Just use the runtime fat jar because the common module is straight up scuffed
+        modImplementation("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
+            exclude(group: "mezz.jei")
+        }
+    } else {
+        modCompileOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
+            exclude(group: "mezz.jei")
+        }
     }
 }
 

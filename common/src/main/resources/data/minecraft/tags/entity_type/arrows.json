@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "tinkerers_fletching:tiered_arrow"
+    "tinkerers_fletching:tiered_arrow",
+    "tinkerers_fletching:tnt_arrow"
   ]
 }
