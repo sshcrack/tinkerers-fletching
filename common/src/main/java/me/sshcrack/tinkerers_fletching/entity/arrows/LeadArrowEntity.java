@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.TeleportTarget;
@@ -27,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public class TntArrowEntity extends PersistentProjectileEntity {
+public class LeadArrowEntity extends PersistentProjectileEntity {
     private boolean teleported;
 
     private static final ExplosionBehavior TELEPORTED_EXPLOSION_BEHAVIOR = new ExplosionBehavior() {
@@ -40,21 +39,21 @@ public class TntArrowEntity extends PersistentProjectileEntity {
         }
     };
 
-    public TntArrowEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
+    public LeadArrowEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public TntArrowEntity(World world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
-        super(TinkerersEntities.TNT_ARROW.get(), x, y, z, world, stack, shotFrom);
+    public LeadArrowEntity(World world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
+        super(TinkerersEntities.LEAD_ARROW.get(), x, y, z, world, stack, shotFrom);
     }
 
-    public TntArrowEntity(World world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
-        super(TinkerersEntities.TNT_ARROW.get(), owner, world, stack, shotFrom);
+    public LeadArrowEntity(World world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
+        super(TinkerersEntities.LEAD_ARROW.get(), owner, world, stack, shotFrom);
     }
 
     @Override
     protected ItemStack getDefaultItemStack() {
-        return TinkerersItems.TNT_ARROW.get().getDefaultStack();
+        return TinkerersItems.LEAD_ARROW.get().getDefaultStack();
     }
 
 
@@ -67,7 +66,7 @@ public class TntArrowEntity extends PersistentProjectileEntity {
     @Nullable
     public Entity teleportTo(TeleportTarget teleportTarget) {
         Entity entity = super.teleportTo(teleportTarget);
-        if (entity instanceof TntArrowEntity arrowEntity) {
+        if (entity instanceof LeadArrowEntity arrowEntity) {
             arrowEntity.setTeleported(true);
         }
 

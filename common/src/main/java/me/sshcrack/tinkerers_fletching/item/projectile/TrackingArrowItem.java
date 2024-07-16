@@ -1,8 +1,6 @@
 package me.sshcrack.tinkerers_fletching.item.projectile;
 
-import me.sshcrack.tinkerers_fletching.duck.ShootSoundOverwriteProvider;
-import me.sshcrack.tinkerers_fletching.entity.arrows.TieredArrowEntity;
-import me.sshcrack.tinkerers_fletching.entity.arrows.TntArrowEntity;
+import me.sshcrack.tinkerers_fletching.entity.arrows.TrackingArrowEntity;
 import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -10,15 +8,13 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class TntArrowItem extends ArrowItem implements FletchingItem, ShootSoundOverwriteProvider {
-    public TntArrowItem() {
+public class TrackingArrowItem extends ArrowItem implements FletchingItem {
+    public TrackingArrowItem() {
         super(new Item.Settings());
     }
 
@@ -29,26 +25,21 @@ public class TntArrowItem extends ArrowItem implements FletchingItem, ShootSound
 
     @Override
     public int getPower(ItemStack stack) {
-        return 5;
+        return 4;
     }
 
 
     @Override
     public PersistentProjectileEntity createArrow(World world, ItemStack stack, LivingEntity shooter, @Nullable ItemStack shotFrom) {
-        return new TntArrowEntity(world, shooter, stack.copyWithCount(1), shotFrom);
+        return new TrackingArrowEntity(world, shooter, stack.copyWithCount(1), shotFrom);
     }
 
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
-        TntArrowEntity tntArrow = new TntArrowEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1), null);
-        tntArrow.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
-        tntArrow.setDamage(getPower(stack));
+        TrackingArrowEntity trackingArrow = new TrackingArrowEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1), null);
+        trackingArrow.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
+        trackingArrow.setDamage(getPower(stack));
 
-        return tntArrow;
-    }
-
-    @Override
-    public SoundEvent getShootSound() {
-        return SoundEvents.ENTITY_TNT_PRIMED;
+        return trackingArrow;
     }
 }

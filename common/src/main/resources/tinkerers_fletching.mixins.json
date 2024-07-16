@@ -8,7 +8,10 @@
     "client.WorldRendererMixin"
   ],
   "mixins": [
+    "BowItemMixin",
+    "ExplosionMixin",
     "FletchingTableBlockMixin",
+    "MixinDamageSource",
     "PersistentProjectileEntityAccessor"
   ],
   "injectors": {

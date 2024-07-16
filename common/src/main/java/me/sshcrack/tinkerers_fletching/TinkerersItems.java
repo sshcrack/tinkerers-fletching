@@ -28,6 +28,8 @@ public class TinkerersItems {
 
     public final static HashMap<ArrowTier, RegistrySupplier<TieredArrowItem>> TIERED_ARROW = new HashMap<>();
     public final static RegistrySupplier<TntArrowItem> TNT_ARROW = register("tnt_arrow", TntArrowItem::new);
+    public final static RegistrySupplier<LeadArrowItem> LEAD_ARROW = register("lead_arrow", LeadArrowItem::new);
+    public final static RegistrySupplier<TrackingArrowItem> TRACKING_ARROW = register("tracking_arrow", TrackingArrowItem::new);
 
     private static <T extends Item> RegistrySupplier<T> register(String name, Supplier<T> item) {
         return TinkerersMod.register(RegistryKeys.ITEM, Identifier.of(TinkerersMod.MOD_ID, name), item);
@@ -49,6 +51,7 @@ public class TinkerersItems {
                     .map(e -> e.get().getDefaultStack())
                     .toList();
             output.acceptAllAfter(Items.ARROW, items);
+            output.acceptAfter(Items.ARROW, TRACKING_ARROW.get());
         });
 
         CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.getOrThrow(ItemGroups.TOOLS), (flags, output, canUseGameMasterBlocks) -> {

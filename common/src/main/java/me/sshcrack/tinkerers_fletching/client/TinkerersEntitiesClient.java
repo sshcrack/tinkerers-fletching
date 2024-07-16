@@ -2,10 +2,9 @@ package me.sshcrack.tinkerers_fletching.client;
 
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.client.registries.EntityRendererRegister;
-import me.sshcrack.tinkerers_fletching.client.renderer.IceSpikeEntityRenderer;
-import me.sshcrack.tinkerers_fletching.client.renderer.StormChargeEntityRenderer;
-import me.sshcrack.tinkerers_fletching.client.renderer.TippedEntityRenderer;
-import me.sshcrack.tinkerers_fletching.client.renderer.TntArrowEntityRenderer;
+import me.sshcrack.tinkerers_fletching.client.renderer.*;
+import me.sshcrack.tinkerers_fletching.entity.arrows.TrackingArrowEntity;
+import net.minecraft.client.render.entity.ArrowEntityRenderer;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 
 public class TinkerersEntitiesClient {
@@ -21,5 +20,7 @@ public class TinkerersEntitiesClient {
 
         EntityRendererRegister.register(TinkerersEntities.TIERED_ARROW, TippedEntityRenderer::new);
         EntityRendererRegister.register(TinkerersEntities.TNT_ARROW, TntArrowEntityRenderer::new);
+        EntityRendererRegister.register(TinkerersEntities.TRACKING_ARROW, TrackingArrowEntityRenderer::new);
+        EntityRendererRegister.register(TinkerersEntities.LEAD_ARROW, LeadArrowEntityRenderer::new);
     }
 }

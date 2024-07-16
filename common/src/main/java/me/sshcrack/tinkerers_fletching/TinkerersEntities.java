@@ -2,8 +2,10 @@ package me.sshcrack.tinkerers_fletching;
 
 import me.sshcrack.tinkerers_fletching.entity.*;
 import me.sshcrack.tinkerers_fletching.entity.RocketPearlEntity;
+import me.sshcrack.tinkerers_fletching.entity.arrows.LeadArrowEntity;
 import me.sshcrack.tinkerers_fletching.entity.arrows.TieredArrowEntity;
 import me.sshcrack.tinkerers_fletching.entity.arrows.TntArrowEntity;
+import me.sshcrack.tinkerers_fletching.entity.arrows.TrackingArrowEntity;
 import me.sshcrack.tinkerers_fletching.registries.EntityTypeRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -26,6 +28,8 @@ public class TinkerersEntities {
 
     public static final Supplier<EntityType<TieredArrowEntity>> TIERED_ARROW = register("tiered_arrow", TieredArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
     public static final Supplier<EntityType<TntArrowEntity>> TNT_ARROW = register("tnt_arrow", TntArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
+    public static final Supplier<EntityType<TrackingArrowEntity>> TRACKING_ARROW = register("tracking_arrow", TrackingArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
+    public static final Supplier<EntityType<LeadArrowEntity>> LEAD_ARROW = register("lead_arrow", LeadArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
 
 
     private static <T extends Entity> Supplier<EntityType<T>> register(String name, EntityType.EntityFactory<T> factory, Consumer<EntityType.Builder<T>> configureBuilder) {

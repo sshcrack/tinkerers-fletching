@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "id": "minecraft:arrow",
+    "id": "tinkerers_fletching:lead_arrow",
     "count": 1
   },
   "type": "tinkerers_fletching:fletching_craft"
