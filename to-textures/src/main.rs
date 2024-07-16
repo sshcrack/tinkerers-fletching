@@ -1,4 +1,4 @@
-use std::{env::args, path::PathBuf};
+use std::path::PathBuf;
 
 use clap::Parser;
 use hex_color::HexColor;
@@ -16,7 +16,11 @@ struct Args {
 
     /// The size of the output image
     #[arg(short, long, default_value_t = 55)]
-    size: u32,
+    width: u32,
+
+    /// The size of the output image
+    #[arg(short, long, default_value_t = 66)]
+    height: u32,
 
     // The color to be transparent
     #[arg(short, long, default_value = "#c2c4c1")]
@@ -48,7 +52,9 @@ fn main() {
     let args = Args::parse();
     let img_file = args.image;
     let use_base = args.base;
-    let desired_size = args.size;
+    let desired_width = args.width;
+    let desired_height = args.height;
+
     let x = HexColor::parse(&args.color).ok();
     if x.is_none() {
         panic!("Could not parse color");
@@ -77,10 +83,10 @@ fn main() {
         );
     }
 
-    let mut out_img = image::ImageBuffer::<Rgba<u8>, Vec<u8>>::new(desired_size, desired_size);
+    let mut out_img = image::ImageBuffer::<Rgba<u8>, Vec<u8>>::new(desired_width, desired_height);
 
-    let mc_base_x_start = desired_size - mc_width;
-    let mc_base_y_start = desired_size - mc_height;
+    let mc_base_x_start = desired_width - mc_width;
+    let mc_base_y_start = desired_height - mc_height;
 
     for mc_x in 0..mc_width {
         for mc_y in 0..mc_height {
@@ -120,8 +126,7 @@ fn main() {
                     continue;
                 }
             }
-            if args.filter_transparent
-            {
+            if args.filter_transparent {
                 if is_same(&color, &to_write) {
                     continue;
                 }

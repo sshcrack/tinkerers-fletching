@@ -92,14 +92,15 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
         super.render(context, mouseX, mouseY, delta);
         if (resItem != null) {
             var xPos = 117;
-            var yPos = 22;
+            var yPos = 11;
 
-            var size = 55;
+            var height = 66;
+            var width = 55;
             var item = (FletchingItem) this.resItem.getItem();
             if (item.getBaseTexture() != null) {
-                context.drawGuiTexture(item.getBaseTexture(), this.x + xPos, this.y + yPos, size, size);
+                context.drawGuiTexture(item.getBaseTexture(), this.x + xPos, this.y + yPos, width, height);
             }
-            context.drawGuiTexture(item.getResultTexture(), this.x + xPos, this.y + yPos, size, size);
+            context.drawGuiTexture(item.getResultTexture(), this.x + xPos, this.y + yPos, width, height);
 
             context.drawText(this.textRenderer, POWER_TEXT, this.x + 44, this.y + 15, 0x8b898a, false);
             renderHealthBar(context, this.x + 77, this.y + 15, 6, item.getPower(resItem));

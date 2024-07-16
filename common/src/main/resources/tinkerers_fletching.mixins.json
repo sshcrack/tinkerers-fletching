@@ -4,6 +4,8 @@
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [
+    "EntityRendererInvoker",
+    "LivingEntityAccessor",
     "client.ClientRecipeBookMixin",
     "client.WorldRendererMixin"
   ],
@@ -12,7 +14,9 @@
     "ExplosionMixin",
     "FletchingTableBlockMixin",
     "MixinDamageSource",
-    "PersistentProjectileEntityAccessor"
+    "PersistentProjectileEntityAccessor",
+    "leash.EntityMixin",
+    "leash.LeashDataMixin"
   ],
   "injectors": {
     "defaultRequire": 1

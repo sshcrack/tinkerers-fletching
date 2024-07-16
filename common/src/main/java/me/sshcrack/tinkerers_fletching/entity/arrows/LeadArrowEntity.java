@@ -2,42 +2,30 @@ package me.sshcrack.tinkerers_fletching.entity.arrows;
 
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.TinkerersItems;
-import me.sshcrack.tinkerers_fletching.duck.ExplosionDamageSourceDuck;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import me.sshcrack.tinkerers_fletching.duck.LeashDataDuck;
+import me.sshcrack.tinkerers_fletching.duck.SneakNotifierDuck;
+import me.sshcrack.tinkerers_fletching.mixin.LivingEntityAccessor;
+import me.sshcrack.tinkerers_fletching.mixin.PersistentProjectileEntityAccessor;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.Leashable;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.TeleportTarget;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
-import net.minecraft.world.explosion.ExplosionBehavior;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Optional;
-
-public class LeadArrowEntity extends PersistentProjectileEntity {
-    private boolean teleported;
-
-    private static final ExplosionBehavior TELEPORTED_EXPLOSION_BEHAVIOR = new ExplosionBehavior() {
-        public boolean canDestroyBlock(Explosion explosion, BlockView world, BlockPos pos, BlockState state, float power) {
-            return !state.isOf(Blocks.NETHER_PORTAL) && super.canDestroyBlock(explosion, world, pos, state, power);
-        }
-
-        public Optional<Float> getBlastResistance(Explosion explosion, BlockView world, BlockPos pos, BlockState blockState, FluidState fluidState) {
-            return blockState.isOf(Blocks.NETHER_PORTAL) ? Optional.empty() : super.getBlastResistance(explosion, world, pos, blockState, fluidState);
-        }
-    };
+public class LeadArrowEntity extends PersistentProjectileEntity implements SneakNotifierDuck.SneakListener {
+    public static final double PULL_SPEED = 0.08;
+    public static final double MAX_HORIZONTAL_DISTANCE = Math.pow(3, 2);
+    public static final double MAX_VERTICAL_DISTANCE = 20;
 
     public LeadArrowEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
@@ -45,10 +33,12 @@ public class LeadArrowEntity extends PersistentProjectileEntity {
 
     public LeadArrowEntity(World world, double x, double y, double z, ItemStack stack, @Nullable ItemStack shotFrom) {
         super(TinkerersEntities.LEAD_ARROW.get(), x, y, z, world, stack, shotFrom);
+        this.pickupType = PickupPermission.DISALLOWED;
     }
 
     public LeadArrowEntity(World world, LivingEntity owner, ItemStack stack, @Nullable ItemStack shotFrom) {
         super(TinkerersEntities.LEAD_ARROW.get(), owner, world, stack, shotFrom);
+        this.pickupType = PickupPermission.DISALLOWED;
     }
 
     @Override
@@ -56,60 +46,138 @@ public class LeadArrowEntity extends PersistentProjectileEntity {
         return TinkerersItems.LEAD_ARROW.get().getDefaultStack();
     }
 
-
-    @SuppressWarnings("SameParameterValue")
-    private void setTeleported(boolean teleported) {
-        this.teleported = teleported;
-    }
-
-    @Override
-    @Nullable
-    public Entity teleportTo(TeleportTarget teleportTarget) {
-        Entity entity = super.teleportTo(teleportTarget);
-        if (entity instanceof LeadArrowEntity arrowEntity) {
-            arrowEntity.setTeleported(true);
-        }
-
-        return entity;
-    }
-
-    private DamageSource createDamageSource(List<BlockPos> toDestroy) {
-        var source = Explosion.createDamageSource(this.getWorld(), this);
-        var duck = (ExplosionDamageSourceDuck) source;
-
-        duck.tinkerers$setBlocksToDestroy(toDestroy);
-        duck.tinkerers$setDestroyOtherBlocks(false);
-        return source;
-    }
-
-    @Override
-    protected void onBlockHit(BlockHitResult blockHitResult) {
-        super.onBlockHit(blockHitResult);
-
-        if (!getWorld().isClient) {
-            var source = createDamageSource(List.of(blockHitResult.getBlockPos()));
-            this.getWorld().createExplosion(this, source, this.teleported ? TELEPORTED_EXPLOSION_BEHAVIOR : null, this.getX(), this.getBodyY(0.0625), this.getZ(), 1.0F, false, World.ExplosionSourceType.TNT);
-        }
-        this.discard();
-    }
-
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
-        var prev = isRemoved();
         super.onEntityHit(entityHitResult);
+        if (getOwner() == null)
+            return;
 
-        if (isRemoved() && !prev) {
-            if (!getWorld().isClient) {
-                var source = createDamageSource(List.of(getBlockPos()));
-                getWorld().createExplosion(this, source, this.teleported ? TELEPORTED_EXPLOSION_BEHAVIOR : null, this.getX(), this.getBodyY(0.0625), this.getZ(), 1.0F, false, World.ExplosionSourceType.TNT);
-            }
+
+        var entity = entityHitResult.getEntity();
+        if (!this.getWorld().isClient() && entity instanceof Leashable leashable) {
+            leashable.attachLeash(this.getOwner(), true);
+            var data = LeashDataDuck.class.cast(leashable.getLeashData());
+            //noinspection ConstantValue
+            assert data != null : "LeashData is null";
+
+            //TODO this doesn't work
+            data.tinkerers$setNoLeadDrop(true);
         }
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (getWorld().isClient)
-            getWorld().addParticle(ParticleTypes.SMOKE, getX(), getY(), getZ(), random.nextGaussian() * 0.05, 0, random.nextGaussian() * 0.05);
+
+        var owner = getOwner();
+        if (!(owner instanceof LivingEntity living))
+            return;
+
+
+        if (getWorld().isClient && age == 1) {
+            var client = MinecraftClient.getInstance();
+            if (living == client.player) {
+                Text text = Text.translatable("mount.onboard", client.options.sneakKey.getBoundKeyLocalizedText());
+
+                client.inGameHud.setOverlayMessage(text, false);
+                client.getNarratorManager().narrate(text);
+            }
+        }
+
+
+        var isJumping = ((LivingEntityAccessor) living).tinkerers$getJumping();
+        if (!isJumping || !inGround) {
+            living.setNoGravity(false);
+            return;
+        }
+
+        ((PersistentProjectileEntityAccessor) this).tinkerers$setLife(0);
+
+
+        var horizontalDistance = getHorizontalDistanceSquared(living);
+        if (horizontalDistance > MAX_HORIZONTAL_DISTANCE) {
+            living.setNoGravity(false);
+            return;
+        }
+
+        var diffVec = living.getPos().subtract(getPos()).normalize();
+        living.setNoGravity(true);
+        var length = living.getVelocity().length();
+
+        living.setVelocity(living.getVelocity().add(diffVec.multiply(-PULL_SPEED)).normalize().multiply(length));
+
+
+        if (age % 20 == 0 && getWorld().isClient && living instanceof PlayerEntity p)
+            getWorld().playSound(
+                    p, p.getX(), p.getY(), p.getZ(),
+                    SoundEvents.BLOCK_LADDER_STEP, SoundCategory.BLOCKS,
+                    0.5F, 1.0F / (getWorld().getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
+            );
+    }
+
+    private double getHorizontalDistanceSquared(LivingEntity living) {
+        var x = living.getX() - getX();
+        var z = living.getZ() - getZ();
+        return x * x + z * z;
+    }
+
+    @Override
+    public boolean shouldRender(double distance) {
+        return super.shouldRender(distance);
+    }
+
+    @Override
+    public void onRemoved() {
+        super.onRemoved();
+        unregisterOwner(getOwner());
+        if (getWorld().isClient && getRemovalReason() == RemovalReason.DISCARDED)
+            getWorld().playSound(
+                    null, getX(), getY(), getZ(),
+                    SoundEvents.BLOCK_LADDER_BREAK, SoundCategory.BLOCKS,
+                    0.15F, 1.0F / (getWorld().getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
+            );
+    }
+
+    private void unregisterOwner(@Nullable Entity owner) {
+        if (owner == null)
+            return;
+
+        var duck = (SneakNotifierDuck) owner;
+
+        duck.tinkerrers$removeSneakListener(this);
+        owner.setNoGravity(false);
+    }
+
+    private void registerOwner(@Nullable Entity owner) {
+        if (owner == null)
+            return;
+
+        var duck = (SneakNotifierDuck) owner;
+        duck.tinkerers$addSneakListener(this);
+    }
+
+    @Override
+    public void setOwner(@Nullable Entity newOwner) {
+        unregisterOwner(getOwner());
+
+
+        super.setOwner(newOwner);
+        pickupType = PickupPermission.DISALLOWED;
+
+        registerOwner(newOwner);
+
+        if (newOwner == null)
+            this.discard();
+    }
+
+    @Override
+    public ActionResult onSneakChange(Entity entity, boolean isSneaking) {
+        if (entity != getOwner())
+            return ActionResult.PASS;
+
+        if (isSneaking)
+            setOwner(null);
+
+        return ActionResult.CONSUME;
     }
 }

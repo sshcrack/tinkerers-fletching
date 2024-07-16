@@ -30,7 +30,7 @@ public class LeadArrowItem extends ArrowItem implements FletchingItem {
 
     @Override
     public int getPower(ItemStack stack) {
-        return 5;
+        return 6;
     }
 
 
@@ -42,14 +42,8 @@ public class LeadArrowItem extends ArrowItem implements FletchingItem {
     @Override
     public ProjectileEntity createEntity(World world, Position pos, ItemStack stack, Direction direction) {
         LeadArrowEntity leadArrow = new LeadArrowEntity(world, pos.getX(), pos.getY(), pos.getZ(), stack.copyWithCount(1), null);
-        leadArrow.pickupType = PersistentProjectileEntity.PickupPermission.ALLOWED;
         leadArrow.setDamage(getPower(stack));
 
         return leadArrow;
-    }
-
-    @Override
-    public @Nullable Identifier getBaseTexture() {
-        return null;
     }
 }

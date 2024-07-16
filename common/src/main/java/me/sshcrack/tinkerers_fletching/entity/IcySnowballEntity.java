@@ -35,7 +35,7 @@ public class IcySnowballEntity extends SnowballEntity {
             return;
 
         var pos = getPos();
-        for (int i = 0; i < 20; i++) {
+        for (int i = 0; i < 50; i++) {
             var entity = new IceSpikeEntity(pos.x, pos.y, pos.z, world);
             var multiplier = 1;
             entity.setVelocity((random.nextFloat() - 0.5) * multiplier, (random.nextFloat() - 0.5) * multiplier, (random.nextFloat() - 0.5) * multiplier);
