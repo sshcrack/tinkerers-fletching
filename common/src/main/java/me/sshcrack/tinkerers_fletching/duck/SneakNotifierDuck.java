@@ -8,6 +8,8 @@ public interface SneakNotifierDuck {
 
     void tinkerrers$removeSneakListener(SneakListener listener);
 
+    void tinkerers$notifyListeners(boolean isSneaking);
+
     interface SneakListener {
         /**
          * Called when the entity's sneaking state changes.

@@ -2,10 +2,7 @@ package me.sshcrack.tinkerers_fletching.client.renderer;
 
 import me.sshcrack.tinkerers_fletching.entity.arrows.LeadArrowEntity;
 import me.sshcrack.tinkerers_fletching.mixin.EntityRendererInvoker;
-import net.minecraft.client.render.LightmapTextureManager;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.ArrowEntityRenderer;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.ProjectileEntityRenderer;

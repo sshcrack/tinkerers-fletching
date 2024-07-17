@@ -30,5 +30,8 @@
   "entity.tinkerers_fletching.tracking_arrow": "Tracking Arrow",
   "entity.tinkerers_fletching.lead_arrow": "Lead Arrow",
 
-  "gui.tinkerers_fletching.category.brewing": "Fletching"
+  "gui.tinkerers_fletching.category.brewing": "Fletching",
+
+  "key.tinkerers_fletching.detach_rope": "Detach Rope",
+  "category.tinkerers_fletching.example": "Tinkerers Fletching"
 }

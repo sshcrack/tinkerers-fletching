@@ -94,6 +94,16 @@ public abstract class EntityMixin implements SneakNotifierDuck {
     @Unique
     private static final Function<EntityPose, Boolean> IS_SNEAKING = p -> p == EntityPose.CROUCHING || p == EntityPose.SWIMMING;
 
+    @Override
+    public void tinkerers$notifyListeners(boolean isSneaking) {
+        var entity = Entity.class.cast(this);
+        for (var listener : tinkerers$sneakListeners) {
+            var res = listener.onSneakChange(entity, isSneaking);
+            if (res == ActionResult.CONSUME)
+                break;
+        }
+    }
+
     @Inject(method = "setPose", at = @At("HEAD"))
     private void tinkerers$notifySneakListeners(EntityPose pose, CallbackInfo ci) {
         var oldPose = getPose();
