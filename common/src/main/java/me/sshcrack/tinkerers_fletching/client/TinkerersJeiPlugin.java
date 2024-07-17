@@ -3,13 +3,11 @@ package me.sshcrack.tinkerers_fletching.client;
 import me.sshcrack.tinkerers_fletching.FletchingScreenHandler;
 import me.sshcrack.tinkerers_fletching.Recipes;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
-import me.sshcrack.tinkerers_fletching.client.jei.CountedIngredientType;
 import me.sshcrack.tinkerers_fletching.client.jei.FletchingCategory;
 import me.sshcrack.tinkerers_fletching.client.jei.RecipeTypesJei;
 import me.sshcrack.tinkerers_fletching.recipe.FletchingRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.*;
 import net.minecraft.block.Blocks;
@@ -66,6 +64,7 @@ public class TinkerersJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
+        //registration.addRecipeTransferHandler(new FletchingTransferHandler(), RecipeTypesJei.FLETCHING_RECIPE_TYPE);
         registration.addRecipeTransferHandler(FletchingScreenHandler.class, TinkerersMod.FLETCHING_SCREEN_HANDLER.get(), RecipeTypesJei.FLETCHING_RECIPE_TYPE, 0, 3, 3, 36);
     }
 }
