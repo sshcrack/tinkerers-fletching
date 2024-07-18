@@ -15,8 +15,6 @@
     "FletchingTableBlockMixin",
     "MixinDamageSource",
     "PersistentProjectileEntityAccessor",
-    "enchantment.EnchantmentDefinitionMixin",
-    "enchantment.EnchantmentMixin",
     "leash.EntityMixin",
     "leash.LeashDataMixin"
   ],
