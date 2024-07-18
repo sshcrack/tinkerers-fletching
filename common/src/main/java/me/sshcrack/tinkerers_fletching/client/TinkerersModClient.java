@@ -2,11 +2,10 @@ package me.sshcrack.tinkerers_fletching.client;
 
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
-import dev.architectury.registry.menu.MenuRegistry;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
+import me.sshcrack.tinkerers_fletching.client.networking.TinkerersS2CNetworking;
 import me.sshcrack.tinkerers_fletching.client.registries.ScreenRegister;
 import me.sshcrack.tinkerers_fletching.duck.SneakNotifierDuck;
-import mezz.jei.gui.input.InputType;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.option.KeyBinding;
@@ -24,6 +23,7 @@ public class TinkerersModClient {
     public static void init() {
         TinkerersMod.LOGGER.info("Initializing client features");
 
+        TinkerersS2CNetworking.register();
         TinkerersEntitiesClient.register();
         KeyMappingRegistry.register(DETACH_ROPE);
 
@@ -35,6 +35,7 @@ public class TinkerersModClient {
                     duck.tinkerers$notifyListeners(true);
             }
         });
+
     }
 
     public static void registerScreens() {

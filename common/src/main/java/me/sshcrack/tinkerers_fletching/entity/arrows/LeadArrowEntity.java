@@ -1,15 +1,17 @@
 package me.sshcrack.tinkerers_fletching.entity.arrows;
 
+import dev.architectury.networking.NetworkManager;
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.TinkerersItems;
+import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import me.sshcrack.tinkerers_fletching.client.sound.LeadSoundInstance;
 import me.sshcrack.tinkerers_fletching.duck.LeashDataDuck;
 import me.sshcrack.tinkerers_fletching.duck.SneakNotifierDuck;
-import me.sshcrack.tinkerers_fletching.mixin.LivingEntityAccessor;
 import me.sshcrack.tinkerers_fletching.mixin.PersistentProjectileEntityAccessor;
+import me.sshcrack.tinkerers_fletching.packet.DetachLeashC2SPacket;
+import me.sshcrack.tinkerers_fletching.packet.RequestLeashAttachmentC2SPacket;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
-import net.minecraft.client.sound.ElytraSoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Leashable;
@@ -17,6 +19,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
+import net.minecraft.server.network.EntityTrackerEntry;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
@@ -25,10 +33,16 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 public class LeadArrowEntity extends PersistentProjectileEntity implements SneakNotifierDuck.SneakListener {
     public static final double PULL_SPEED = 0.08;
     public static final double MAX_HORIZONTAL_DISTANCE = Math.pow(3, 2);
     public static final double MAX_VERTICAL_DISTANCE = 20;
+
+    @Nullable
+    private LivingEntity attachedTo;
+    private UUID attachedToUuid;
 
     public LeadArrowEntity(EntityType<? extends PersistentProjectileEntity> entityType, World world) {
         super(entityType, world);
@@ -52,13 +66,13 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
     @Override
     protected void onEntityHit(EntityHitResult entityHitResult) {
         super.onEntityHit(entityHitResult);
-        if (getOwner() == null)
+        if (getRopeAttachedTo() == null)
             return;
 
 
         var entity = entityHitResult.getEntity();
         if (!this.getWorld().isClient() && entity instanceof Leashable leashable) {
-            leashable.attachLeash(this.getOwner(), true);
+            leashable.attachLeash(this.getRopeAttachedTo(), true);
             var data = LeashDataDuck.class.cast(leashable.getLeashData());
             //noinspection ConstantValue
             assert data != null : "LeashData is null";
@@ -72,8 +86,8 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
     public void tick() {
         super.tick();
 
-        var owner = getOwner();
-        if (!(owner instanceof LivingEntity living))
+        var living = getRopeAttachedTo();
+        if (living == null)
             return;
 
 
@@ -91,6 +105,7 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
 
         var horizontalDistance = getHorizontalDistanceSquared(living);
         applyLeashElasticity(living, this, Math.sqrt(horizontalDistance) + 5d);
+        living.limitFallDistance();
         ((PersistentProjectileEntityAccessor) this).tinkerers$setLife(0);
 
         if (age % 5 == 0 && !inGround && getWorld().isClient && living instanceof PlayerEntity p)
@@ -99,34 +114,6 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
                     SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS,
                     0.5F, 1.0F / (getWorld().getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
             );
-/*
-        var isJumping = ((LivingEntityAccessor) living).tinkerers$getJumping();
-        if (!isJumping || !inGround) {
-            living.setNoGravity(false);
-            return;
-        }
-
-        ((PersistentProjectileEntityAccessor) this).tinkerers$setLife(0);
-
-
-        if (horizontalDistance > MAX_HORIZONTAL_DISTANCE) {
-            living.setNoGravity(false);
-            return;
-        }
-
-        var diffVec = living.getPos().subtract(getPos()).normalize();
-        living.setNoGravity(true);
-        var length = living.getVelocity().length();
-
-        living.setVelocity(living.getVelocity().add(diffVec.multiply(-PULL_SPEED)).normalize().multiply(length));
-
-
-        if (age % 20 == 0 && getWorld().isClient && living instanceof PlayerEntity p)
-            getWorld().playSound(
-                    p, p.getX(), p.getY(), p.getZ(),
-                    SoundEvents.BLOCK_LADDER_STEP, SoundCategory.BLOCKS,
-                    0.5F, 1.0F / (getWorld().getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
-            );*/
     }
 
     /**
@@ -161,7 +148,7 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
     @Override
     public void onRemoved() {
         super.onRemoved();
-        unregisterOwner(getOwner());
+        unregisterAttachment(getOwner());
         if (getWorld().isClient && getRemovalReason() == RemovalReason.DISCARDED)
             getWorld().playSound(
                     null, getX(), getY(), getZ(),
@@ -170,55 +157,98 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
             );
     }
 
-    private void unregisterOwner(@Nullable Entity owner) {
-        if (owner == null)
+    private void unregisterAttachment(@Nullable Entity attachedEntity) {
+        if (attachedEntity == null)
             return;
 
-        var duck = (SneakNotifierDuck) owner;
+        var duck = (SneakNotifierDuck) attachedEntity;
 
         duck.tinkerrers$removeSneakListener(this);
-        owner.setNoGravity(false);
     }
 
-    private void registerOwner(@Nullable Entity owner) {
-        if (owner == null)
+    private void registerAttachment(@Nullable Entity attachedEntity) {
+        if (attachedEntity == null)
             return;
 
 
         if (getWorld().isClient) {
             var client = MinecraftClient.getInstance();
-            if (owner == client.player) {
-                if (owner instanceof ClientPlayerEntity p)
+            if (attachedEntity == client.player) {
+                if (attachedEntity instanceof ClientPlayerEntity p)
                     client.getSoundManager().play(new LeadSoundInstance(p, this));
             }
         }
 
-        var duck = (SneakNotifierDuck) owner;
+        var duck = (SneakNotifierDuck) attachedEntity;
         duck.tinkerers$addSneakListener(this);
     }
 
     @Override
-    public void setOwner(@Nullable Entity newOwner) {
-        unregisterOwner(getOwner());
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        if (attachedToUuid != null)
+            nbt.putUuid("RopeAttachedTo", attachedToUuid);
+    }
 
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
 
-        super.setOwner(newOwner);
-        pickupType = PickupPermission.DISALLOWED;
+        if (nbt.containsUuid("RopeAttachedTo"))
+            attachedToUuid = nbt.getUuid("RopeAttachedTo");
+    }
 
-        registerOwner(newOwner);
+    @Nullable
+    public LivingEntity getRopeAttachedTo() {
+        if (attachedTo != null && attachedTo.getUuid().compareTo(attachedToUuid) != 0) {
+            attachedTo = null;
+        }
 
-        if (newOwner == null)
+        if (this.attachedTo == null && this.attachedToUuid != null) {
+            if (this.getWorld() instanceof ServerWorld sWorld) {
+                Entity entity = sWorld.getEntity(this.attachedToUuid);
+                if (entity instanceof LivingEntity l) {
+                    this.attachedTo = l;
+                }
+            }
+        }
+
+        return this.attachedTo;
+    }
+
+    public void setRopeAttachedTo(@Nullable LivingEntity attachedTo) {
+        unregisterAttachment(this.attachedTo);
+
+        this.attachedTo = attachedTo;
+        registerAttachment(attachedTo);
+
+        if (attachedTo == null)
             this.discard();
+    }
+
+    public void sendDetachRope() {
+        if (!getWorld().isClient) {
+            TinkerersMod.LOGGER.info("Tried to call detach rope server sided");
+            return;
+        }
+
+        NetworkManager.sendToServer(new DetachLeashC2SPacket(this.getId()));
     }
 
     @Override
     public ActionResult onSneakChange(Entity entity, boolean isSneaking) {
-        if (entity != getOwner())
+        if (entity != getRopeAttachedTo() || !getWorld().isClient)
             return ActionResult.PASS;
 
         if (isSneaking)
-            setOwner(null);
+            sendDetachRope();
 
         return ActionResult.CONSUME;
+    }
+
+    @Override
+    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
+        super.onSpawnPacket(packet);
+        NetworkManager.sendToServer(new RequestLeashAttachmentC2SPacket(packet.getId()));
     }
 }

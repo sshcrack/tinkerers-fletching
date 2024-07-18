@@ -11,6 +11,7 @@
   ],
   "mixins": [
     "BowItemMixin",
+    "EntitySpawnS2CPacketMixin",
     "ExplosionMixin",
     "FletchingTableBlockMixin",
     "MixinDamageSource",

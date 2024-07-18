@@ -52,6 +52,7 @@ public class TinkerersItems {
                     .toList();
             output.acceptAllAfter(Items.ARROW, items);
             output.acceptAfter(Items.ARROW, TRACKING_ARROW.get());
+            output.acceptAfter(Items.ARROW, LEAD_ARROW.get());
         });
 
         CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.getOrThrow(ItemGroups.TOOLS), (flags, output, canUseGameMasterBlocks) -> {

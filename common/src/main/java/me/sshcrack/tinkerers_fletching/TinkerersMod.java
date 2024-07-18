@@ -6,6 +6,7 @@ import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.registry.registries.RegistrySupplier;
+import me.sshcrack.tinkerers_fletching.networking.TinkerersC2SNetworking;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
@@ -40,6 +41,7 @@ public final class TinkerersMod {
         TinkerersStats.register();
         TinkerersItems.register();
         TinkerersEntities.register();
+        TinkerersC2SNetworking.register();
     }
 
     public static void setup() {

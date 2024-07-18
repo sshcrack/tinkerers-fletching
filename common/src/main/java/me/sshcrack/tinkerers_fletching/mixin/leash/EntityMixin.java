@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.Leashable;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.ActionResult;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -79,44 +80,31 @@ public abstract class EntityMixin implements SneakNotifierDuck {
 
 
     @Unique
-    private final List<SneakListener> tinkerers$sneakListeners = new ArrayList<>();
+    @Nullable
+    private List<SneakListener> tinkerers$sneakListeners;
 
     @Override
     public void tinkerers$addSneakListener(SneakListener listener) {
+        if (tinkerers$sneakListeners == null)
+            tinkerers$sneakListeners = new ArrayList<>();
         tinkerers$sneakListeners.add(listener);
     }
 
     @Override
     public void tinkerrers$removeSneakListener(SneakListener listener) {
+        if (tinkerers$sneakListeners == null)
+            tinkerers$sneakListeners = new ArrayList<>();
         tinkerers$sneakListeners.remove(listener);
     }
 
-    @Unique
-    private static final Function<EntityPose, Boolean> IS_SNEAKING = p -> p == EntityPose.CROUCHING || p == EntityPose.SWIMMING;
-
     @Override
     public void tinkerers$notifyListeners(boolean isSneaking) {
-        var entity = Entity.class.cast(this);
-        for (var listener : tinkerers$sneakListeners) {
-            var res = listener.onSneakChange(entity, isSneaking);
-            if (res == ActionResult.CONSUME)
-                break;
-        }
-    }
-
-    @Inject(method = "setPose", at = @At("HEAD"))
-    private void tinkerers$notifySneakListeners(EntityPose pose, CallbackInfo ci) {
-        var oldPose = getPose();
-
-        var oldSneaking = IS_SNEAKING.apply(oldPose);
-        var sneaking = IS_SNEAKING.apply(pose);
-
-        if (oldSneaking == sneaking)
+        if (tinkerers$sneakListeners == null)
             return;
 
         var entity = Entity.class.cast(this);
         for (var listener : tinkerers$sneakListeners) {
-            var res = listener.onSneakChange(entity, sneaking);
+            var res = listener.onSneakChange(entity, isSneaking);
             if (res == ActionResult.CONSUME)
                 break;
         }
