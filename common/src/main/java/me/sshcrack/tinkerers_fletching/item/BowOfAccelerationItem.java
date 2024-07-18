@@ -1,6 +1,7 @@
 package me.sshcrack.tinkerers_fletching.item;
 
 
+import me.sshcrack.tinkerers_fletching.enchantment.PseudoEnchantmentRegistry;
 import me.sshcrack.tinkerers_fletching.enchantment.PseudoEnchantmentSupport;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
@@ -17,6 +18,7 @@ public class BowOfAccelerationItem extends BowItem implements FletchingItem, Pse
 
     public BowOfAccelerationItem() {
         super(new Item.Settings().maxDamage((int) (384d * MAX_DAMAGE_MULTIPLIER)));
+        PseudoEnchantmentRegistry.registerPseudoEnchantment(this);
     }
 
     @Override
