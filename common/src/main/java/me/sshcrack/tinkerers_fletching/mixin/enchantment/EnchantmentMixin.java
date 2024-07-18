@@ -2,7 +2,7 @@ package me.sshcrack.tinkerers_fletching.mixin.enchantment;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import me.sshcrack.tinkerers_fletching.duck.PseudoEnchantmentSupport;
+import me.sshcrack.tinkerers_fletching.enchantment.PseudoEnchantmentSupport;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;

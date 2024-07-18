@@ -1,7 +1,7 @@
 package me.sshcrack.tinkerers_fletching.item;
 
 
-import me.sshcrack.tinkerers_fletching.duck.PseudoEnchantmentSupport;
+import me.sshcrack.tinkerers_fletching.enchantment.PseudoEnchantmentSupport;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.BowItem;
@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public class BowOfAccelerationItem extends BowItem implements FletchingItem, PseudoEnchantmentSupport {
-    public static float VELOCITY_MULTIPLIER = 1.5f;
+    public static float VELOCITY_MULTIPLIER = 1.2f;
     public static double MAX_DAMAGE_MULTIPLIER = 1.2d;
 
     public BowOfAccelerationItem() {
@@ -30,7 +30,8 @@ public class BowOfAccelerationItem extends BowItem implements FletchingItem, Pse
     }
 
     @Override
-cd .        return 5;
+    public int getPower(ItemStack stack) {
+        return 5;
     }
 
     @Override
