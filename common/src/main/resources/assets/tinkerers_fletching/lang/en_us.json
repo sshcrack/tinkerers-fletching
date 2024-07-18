@@ -19,6 +19,11 @@
   "item.tinkerers_fletching.tnt_arrow": "TNT Arrow",
   "item.tinkerers_fletching.tracking_arrow": "Tracking Arrow",
   "item.tinkerers_fletching.lead_arrow": "Lead Arrow",
+  "item.tinkerers_fletching.bow_of_acceleration": "Bow Of Acceleration",
+  "item.tinkerers_fletching.lead_arrow.description.1": "A heavy arrow with a lead attached.",
+  "item.tinkerers_fletching.lead_arrow.description.2": "Can be used to climb up walls or to catapult yourself.",
+  "item.tinkerers_fletching.lead_arrow.description.elytra.1": "Be careful when using this arrow",
+  "item.tinkerers_fletching.lead_arrow.description.elytra.2": "with an elytra though, it might not end well.",
 
   "entity.tinkerers_fletching.iron_egg": "Iron Egg",
   "entity.tinkerers_fletching.big_snowball": "Big Snowball",
@@ -33,5 +38,5 @@
   "gui.tinkerers_fletching.category.brewing": "Fletching",
 
   "key.tinkerers_fletching.detach_rope": "Detach Rope",
-  "category.tinkerers_fletching.example": "Tinkerers Fletching"
+  "category.tinkerers_fletching.general": "Tinkerers Fletching"
 }

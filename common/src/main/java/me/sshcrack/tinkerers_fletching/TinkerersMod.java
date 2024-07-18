@@ -36,12 +36,12 @@ public final class TinkerersMod {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static void init() {
+        TinkerersC2SNetworking.register();
         TinkerersMod.LOGGER.info("Initializing common...");
         Recipes.register();
         TinkerersStats.register();
         TinkerersItems.register();
         TinkerersEntities.register();
-        TinkerersC2SNetworking.register();
     }
 
     public static void setup() {

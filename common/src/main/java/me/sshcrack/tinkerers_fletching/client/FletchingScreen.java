@@ -100,7 +100,9 @@ public class FletchingScreen extends ForgingScreen<FletchingScreenHandler> {
             if (item.getBaseTexture() != null) {
                 context.drawGuiTexture(item.getBaseTexture(), this.x + xPos, this.y + yPos, width, height);
             }
-            context.drawGuiTexture(item.getResultTexture(), this.x + xPos, this.y + yPos, width, height);
+
+            if (item.getResultTexture() != null)
+                context.drawGuiTexture(item.getResultTexture(), this.x + xPos, this.y + yPos, width, height);
 
             context.drawText(this.textRenderer, POWER_TEXT, this.x + 44, this.y + 15, 0x8b898a, false);
             renderHealthBar(context, this.x + 77, this.y + 15, 6, item.getPower(resItem));

@@ -23,12 +23,11 @@ public class LeadArrowEntityRenderer extends ProjectileEntityRenderer<LeadArrowE
     @Override
     public void render(LeadArrowEntity leadArrow, float yaw, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light) {
         super.render(leadArrow, yaw, tickDelta, matrices, vertexConsumers, light);
-        var owner = leadArrow.getOwner();
-        if (owner == null)
+        var ropeAttachment = leadArrow.getRopeAttachedTo();
+        if (ropeAttachment == null)
             return;
 
-        renderLeash(leadArrow, tickDelta, matrices, vertexConsumers, owner);
-        //renderArrowLeash(leadArrow, owner, tickDelta, matrices, vertexConsumers, light);
+        renderLeash(leadArrow, tickDelta, matrices, vertexConsumers, ropeAttachment);
     }
 
 

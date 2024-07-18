@@ -2,6 +2,7 @@ package me.sshcrack.tinkerers_fletching;
 
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
+import me.sshcrack.tinkerers_fletching.item.BowOfAccelerationItem;
 import me.sshcrack.tinkerers_fletching.item.projectile.*;
 import me.sshcrack.tinkerers_fletching.item.projectile.tiered.*;
 import net.minecraft.item.Item;
@@ -11,7 +12,6 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.util.Identifier;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.function.Supplier;
@@ -30,6 +30,8 @@ public class TinkerersItems {
     public final static RegistrySupplier<TntArrowItem> TNT_ARROW = register("tnt_arrow", TntArrowItem::new);
     public final static RegistrySupplier<LeadArrowItem> LEAD_ARROW = register("lead_arrow", LeadArrowItem::new);
     public final static RegistrySupplier<TrackingArrowItem> TRACKING_ARROW = register("tracking_arrow", TrackingArrowItem::new);
+
+    public final static RegistrySupplier<BowOfAccelerationItem> BOW_OF_ACCELERATION = register("bow_of_acceleration", BowOfAccelerationItem::new);
 
     private static <T extends Item> RegistrySupplier<T> register(String name, Supplier<T> item) {
         return TinkerersMod.register(RegistryKeys.ITEM, Identifier.of(TinkerersMod.MOD_ID, name), item);
@@ -53,6 +55,8 @@ public class TinkerersItems {
             output.acceptAllAfter(Items.ARROW, items);
             output.acceptAfter(Items.ARROW, TRACKING_ARROW.get());
             output.acceptAfter(Items.ARROW, LEAD_ARROW.get());
+
+            output.acceptAfter(Items.BOW, BOW_OF_ACCELERATION.get());
         });
 
         CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.getOrThrow(ItemGroups.TOOLS), (flags, output, canUseGameMasterBlocks) -> {

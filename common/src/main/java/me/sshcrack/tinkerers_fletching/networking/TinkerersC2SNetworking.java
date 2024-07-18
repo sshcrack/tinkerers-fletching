@@ -5,18 +5,14 @@ import me.sshcrack.tinkerers_fletching.entity.arrows.LeadArrowEntity;
 import me.sshcrack.tinkerers_fletching.packet.DetachLeashC2SPacket;
 import me.sshcrack.tinkerers_fletching.packet.RequestLeashAttachmentC2SPacket;
 import me.sshcrack.tinkerers_fletching.packet.SetAttachedToS2CPacket;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 
 import java.util.OptionalInt;
 
 public class TinkerersC2SNetworking {
-    public static void onDetachLeadPacket(DetachLeashC2SPacket packet, NetworkManager.PacketContext listener) {
-        if (!(listener instanceof ServerPlayNetworkHandler handler))
-            return;
-
-        var world = handler.player.getWorld();
+    public static void onDetachLeadPacket(DetachLeashC2SPacket packet, NetworkManager.PacketContext context) {
+        var world = context.getPlayer().getWorld();
         assert world instanceof ServerWorld : "World is not a server world";
 
         var sWorld = (ServerWorld) world;
@@ -36,18 +32,14 @@ public class TinkerersC2SNetworking {
     }
 
     private static void onRequestAttachment(RequestLeashAttachmentC2SPacket packet, NetworkManager.PacketContext context) {
-        if (!(context instanceof ServerPlayNetworkHandler handler))
-            return;
-
-        var world = handler.player.getWorld();
-        assert world instanceof ServerWorld : "World is not a server world";
-
-        var sWorld = (ServerWorld) world;
-
+        var world = context.getPlayer().getWorld();
         var entity = world.getEntityById(packet.arrowId());
         if (!(entity instanceof LeadArrowEntity leadArrow))
             return;
 
-        NetworkManager.sendToPlayer((ServerPlayerEntity) context.getPlayer(), new SetAttachedToS2CPacket(leadArrow, leadArrow.getRopeAttachedTo()));
+        if (!(context.getPlayer() instanceof ServerPlayerEntity serverPlayer))
+            throw new IllegalStateException("Player is not a server player");
+
+        NetworkManager.sendToPlayer(serverPlayer, new SetAttachedToS2CPacket(leadArrow, leadArrow.getRopeAttachedTo()));
     }
 }

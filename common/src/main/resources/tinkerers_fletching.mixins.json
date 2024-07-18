@@ -11,11 +11,11 @@
   ],
   "mixins": [
     "BowItemMixin",
-    "EntitySpawnS2CPacketMixin",
     "ExplosionMixin",
     "FletchingTableBlockMixin",
     "MixinDamageSource",
     "PersistentProjectileEntityAccessor",
+    "enchantment.EnchantmentMixin",
     "leash.EntityMixin",
     "leash.LeashDataMixin"
   ],

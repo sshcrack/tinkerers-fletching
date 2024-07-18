@@ -44,7 +44,7 @@ public interface FletchingItem {
         return Identifier.of(TinkerersMod.MOD_ID, "container/fletching/result/overworld");
     }
 
-    @NotNull
+    @Nullable
     default Identifier getResultTexture() {
         var itemName = Registries.ITEM.getId((Item) this).getPath();
 

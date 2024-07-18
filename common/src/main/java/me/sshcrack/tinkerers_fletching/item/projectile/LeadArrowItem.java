@@ -1,8 +1,6 @@
 package me.sshcrack.tinkerers_fletching.item.projectile;
 
-import me.sshcrack.tinkerers_fletching.duck.ShootSoundOverwriteProvider;
 import me.sshcrack.tinkerers_fletching.entity.arrows.LeadArrowEntity;
-import me.sshcrack.tinkerers_fletching.entity.arrows.TntArrowEntity;
 import me.sshcrack.tinkerers_fletching.item.FletchingItem;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
@@ -10,13 +8,16 @@ import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.ArrowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Identifier;
+import net.minecraft.item.tooltip.TooltipType;
+import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Position;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Locale;
 
 public class LeadArrowItem extends ArrowItem implements FletchingItem {
     public LeadArrowItem() {
@@ -36,7 +37,10 @@ public class LeadArrowItem extends ArrowItem implements FletchingItem {
 
     @Override
     public PersistentProjectileEntity createArrow(World world, ItemStack stack, LivingEntity shooter, @Nullable ItemStack shotFrom) {
-        return new LeadArrowEntity(world, shooter, stack.copyWithCount(1), shotFrom);
+        var entity = new LeadArrowEntity(world, shooter, stack.copyWithCount(1), shotFrom);
+        entity.setRopeAttachedTo(shooter);
+
+        return entity;
     }
 
     @Override
@@ -45,5 +49,13 @@ public class LeadArrowItem extends ArrowItem implements FletchingItem {
         leadArrow.setDamage(getPower(stack));
 
         return leadArrow;
+    }
+
+    @Override
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.1").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.2").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.elytra.1").formatted(Formatting.RED));
+        tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.elytra.2").formatted(Formatting.RED));
     }
 }

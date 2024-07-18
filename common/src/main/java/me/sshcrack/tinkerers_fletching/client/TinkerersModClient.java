@@ -8,6 +8,8 @@ import me.sshcrack.tinkerers_fletching.client.registries.ScreenRegister;
 import me.sshcrack.tinkerers_fletching.duck.SneakNotifierDuck;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 
@@ -16,7 +18,7 @@ public class TinkerersModClient {
     public static final KeyBinding DETACH_ROPE = new KeyBinding(
             "key.tinkerers_fletching.detach_rope",
             InputUtil.Type.KEYSYM,
-            InputUtil.GLFW_KEY_LEFT_SHIFT,
+            InputUtil.UNKNOWN_KEY.getCode(),
             "category.tinkerers_fletching.general"
     );
 
@@ -29,8 +31,16 @@ public class TinkerersModClient {
 
         ClientTickEvent.CLIENT_POST.register(client -> {
             var duck = (SneakNotifierDuck) client.player;
+            var player = MinecraftClient.getInstance().player;
+            if (player == null)
+                return;
 
+            var detachPressed = false;
             while (DETACH_ROPE.wasPressed()) {
+                detachPressed = true;
+            }
+
+            if ((DETACH_ROPE.isUnbound() ? player.input.sneaking : detachPressed)) {
                 if (duck != null)
                     duck.tinkerers$notifyListeners(true);
             }

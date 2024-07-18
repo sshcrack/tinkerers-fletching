@@ -28,6 +28,6 @@ public class TinkerersS2CNetworking {
     }
 
     public static void register() {
-        NetworkManager.registerReceiver(NetworkManager.Side.C2S, SetAttachedToS2CPacket.PACKET_TYPE, SetAttachedToS2CPacket.PACKET_CODEC, TinkerersS2CNetworking::onSetAttachedToPacket);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, SetAttachedToS2CPacket.PACKET_TYPE, SetAttachedToS2CPacket.PACKET_CODEC, TinkerersS2CNetworking::onSetAttachedToPacket);
     }
 }

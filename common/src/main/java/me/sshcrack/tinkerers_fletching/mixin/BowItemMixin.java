@@ -2,8 +2,11 @@ package me.sshcrack.tinkerers_fletching.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import me.sshcrack.tinkerers_fletching.duck.CustomBowVelocity;
 import me.sshcrack.tinkerers_fletching.duck.ShootSoundOverwriteProvider;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundCategory;
@@ -31,5 +34,13 @@ public class BowItemMixin {
         }
 
         original.call(instance, source, x, y, z, sound, category, volume, pitch);
+    }
+
+    @WrapOperation(method = "shoot", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/projectile/ProjectileEntity;setVelocity(Lnet/minecraft/entity/Entity;FFFFF)V"))
+    private void tinkerers$setVelocity(ProjectileEntity instance, Entity shooter, float pitch, float yaw, float roll, float speed, float divergence, Operation<Void> original) {
+        if (instance instanceof CustomBowVelocity custom)
+            speed *= custom.getBowVelocityMultiplier(shooter, pitch, yaw, roll, speed, divergence);
+
+        original.call(instance, shooter, pitch, yaw, roll, speed, divergence);
     }
 }

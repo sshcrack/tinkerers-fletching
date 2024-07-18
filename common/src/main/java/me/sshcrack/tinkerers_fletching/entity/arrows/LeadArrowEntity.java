@@ -4,7 +4,9 @@ import dev.architectury.networking.NetworkManager;
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.TinkerersItems;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
+import me.sshcrack.tinkerers_fletching.client.TinkerersModClient;
 import me.sshcrack.tinkerers_fletching.client.sound.LeadSoundInstance;
+import me.sshcrack.tinkerers_fletching.duck.CustomBowVelocity;
 import me.sshcrack.tinkerers_fletching.duck.LeashDataDuck;
 import me.sshcrack.tinkerers_fletching.duck.SneakNotifierDuck;
 import me.sshcrack.tinkerers_fletching.mixin.PersistentProjectileEntityAccessor;
@@ -20,10 +22,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.EntitySpawnS2CPacket;
-import net.minecraft.server.network.EntityTrackerEntry;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -35,10 +33,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.UUID;
 
-public class LeadArrowEntity extends PersistentProjectileEntity implements SneakNotifierDuck.SneakListener {
-    public static final double PULL_SPEED = 0.08;
-    public static final double MAX_HORIZONTAL_DISTANCE = Math.pow(3, 2);
-    public static final double MAX_VERTICAL_DISTANCE = 20;
+public class LeadArrowEntity extends PersistentProjectileEntity implements SneakNotifierDuck.SneakListener, CustomBowVelocity {
+    public static double VELOCITY_MULTIPLIER = 0.25;
+
+    private boolean requestedData = false;
 
     @Nullable
     private LivingEntity attachedTo;
@@ -86,6 +84,12 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
     public void tick() {
         super.tick();
 
+        if (!requestedData && getWorld().isClient) {
+            NetworkManager.sendToServer(new RequestLeashAttachmentC2SPacket(getId()));
+            requestedData = true;
+            return;
+        }
+
         var living = getRopeAttachedTo();
         if (living == null)
             return;
@@ -96,7 +100,11 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
             if (living == client.player) {
                 if (living instanceof ClientPlayerEntity p)
                     client.getSoundManager().play(new LeadSoundInstance(p, this));
-                Text text = Text.translatable("mount.onboard", client.options.sneakKey.getBoundKeyLocalizedText());
+                var key = client.options.sneakKey;
+                if (!TinkerersModClient.DETACH_ROPE.isUnbound())
+                    key = TinkerersModClient.DETACH_ROPE;
+
+                Text text = Text.translatable("mount.onboard", key.getBoundKeyLocalizedText());
 
                 client.inGameHud.setOverlayMessage(text, false);
                 client.getNarratorManager().narrate(text);
@@ -200,7 +208,7 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
 
     @Nullable
     public LivingEntity getRopeAttachedTo() {
-        if (attachedTo != null && attachedTo.getUuid().compareTo(attachedToUuid) != 0) {
+        if (attachedTo != null && attachedToUuid != null && attachedTo.getUuid().compareTo(attachedToUuid) != 0) {
             attachedTo = null;
         }
 
@@ -247,8 +255,7 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
     }
 
     @Override
-    public void onSpawnPacket(EntitySpawnS2CPacket packet) {
-        super.onSpawnPacket(packet);
-        NetworkManager.sendToServer(new RequestLeashAttachmentC2SPacket(packet.getId()));
+    public float getBowVelocityMultiplier(Entity shooter, float pitch, float yaw, float roll, float speed, float divergence) {
+        return 0.5f;
     }
 }

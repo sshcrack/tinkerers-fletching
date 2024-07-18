@@ -20,7 +20,7 @@ public record SetAttachedToS2CPacket(int arrowId, OptionalInt newAttached) imple
     }
 
     public SetAttachedToS2CPacket(RegistryByteBuf buf) {
-        this(buf.readInt(), buf.readBoolean() ? OptionalInt.empty() : OptionalInt.of(buf.readInt()));
+        this(buf.readInt(), buf.readBoolean() ? OptionalInt.of(buf.readInt()) : OptionalInt.empty());
     }
 
     private void write(RegistryByteBuf buf) {
