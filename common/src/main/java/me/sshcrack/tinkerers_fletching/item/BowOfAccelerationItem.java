@@ -1,11 +1,11 @@
 package me.sshcrack.tinkerers_fletching.item;
 
+import me.sshcrack.tinkerers_fletching.client.TinkerersModelPredicate;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.projectile.ProjectileEntity;
 import net.minecraft.item.BowItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +15,8 @@ public class BowOfAccelerationItem extends BowItem implements FletchingItem {
 
     public BowOfAccelerationItem() {
         super(new Item.Settings().maxDamage((int) (384d * MAX_DAMAGE_MULTIPLIER)));
+
+        TinkerersModelPredicate.registerBow(this);
     }
 
     @Override

@@ -12,6 +12,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
+import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class TinkerersModClient {
@@ -46,6 +49,7 @@ public class TinkerersModClient {
             }
         });
 
+        TinkerersModelPredicate.register();
     }
 
     public static void registerScreens() {

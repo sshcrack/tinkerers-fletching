@@ -2,17 +2,9 @@ package me.sshcrack.tinkerers_fletching.neoforge;
 
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import me.sshcrack.tinkerers_fletching.client.TinkerersModClient;
-import me.sshcrack.tinkerers_fletching.client.registries.neoforge.ScreenProviderInfo;
 import me.sshcrack.tinkerers_fletching.client.registries.neoforge.ScreenRegisterImpl;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.registry.Registries;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.text.Text;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
@@ -21,8 +13,6 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
-
-import java.lang.reflect.InvocationTargetException;
 
 @SuppressWarnings("unused")
 @Mod(TinkerersMod.MOD_ID)
