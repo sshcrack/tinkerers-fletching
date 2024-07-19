@@ -8,7 +8,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.entity.LivingEntity;
 
 @Environment(EnvType.CLIENT)
-public class TinkerersS2CNetworking {
+public class TinkerersC2SNetworking {
+
     private static void onSetAttachedToPacket(SetAttachedToS2CPacket packet, NetworkManager.PacketContext packetContext) {
         var player = packetContext.getPlayer();
         var world = player.getWorld();
@@ -28,6 +29,6 @@ public class TinkerersS2CNetworking {
     }
 
     public static void register() {
-        NetworkManager.registerReceiver(NetworkManager.Side.S2C, SetAttachedToS2CPacket.PACKET_TYPE, SetAttachedToS2CPacket.PACKET_CODEC, TinkerersS2CNetworking::onSetAttachedToPacket);
+        NetworkManager.registerReceiver(NetworkManager.Side.S2C, SetAttachedToS2CPacket.PACKET_TYPE, SetAttachedToS2CPacket.PACKET_CODEC, TinkerersC2SNetworking::onSetAttachedToPacket);
     }
 }

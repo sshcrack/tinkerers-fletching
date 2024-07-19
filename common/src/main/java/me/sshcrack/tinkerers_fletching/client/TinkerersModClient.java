@@ -3,18 +3,15 @@ package me.sshcrack.tinkerers_fletching.client;
 import dev.architectury.event.events.client.ClientTickEvent;
 import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
-import me.sshcrack.tinkerers_fletching.client.networking.TinkerersS2CNetworking;
+import me.sshcrack.tinkerers_fletching.client.networking.TinkerersC2SNetworking;
+import me.sshcrack.tinkerers_fletching.networking.TinkerersS2CNetworking;
 import me.sshcrack.tinkerers_fletching.client.registries.ScreenRegister;
 import me.sshcrack.tinkerers_fletching.duck.SneakNotifierDuck;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.option.GameOptions;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
-import net.minecraft.item.Items;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class TinkerersModClient {
@@ -28,7 +25,7 @@ public class TinkerersModClient {
     public static void init() {
         TinkerersMod.LOGGER.info("Initializing client features");
 
-        TinkerersS2CNetworking.register();
+        TinkerersC2SNetworking.register();
         TinkerersEntitiesClient.register();
         KeyMappingRegistry.register(DETACH_ROPE);
 

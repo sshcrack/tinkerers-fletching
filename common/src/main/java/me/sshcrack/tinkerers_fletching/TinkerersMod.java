@@ -1,13 +1,12 @@
 package me.sshcrack.tinkerers_fletching;
 
 import com.google.common.base.Suppliers;
-import dev.architectury.registry.client.keymappings.KeyMappingRegistry;
 import dev.architectury.registry.menu.MenuRegistry;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrarManager;
 import dev.architectury.registry.registries.RegistrySupplier;
-import me.sshcrack.tinkerers_fletching.networking.TinkerersC2SNetworking;
-import net.minecraft.client.option.KeyBinding;
+import me.sshcrack.tinkerers_fletching.client.networking.TinkerersC2SNetworking;
+import me.sshcrack.tinkerers_fletching.networking.TinkerersS2CNetworking;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryKeys;
@@ -36,12 +35,12 @@ public final class TinkerersMod {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static void init() {
-        TinkerersC2SNetworking.register();
         TinkerersMod.LOGGER.info("Initializing common...");
         Recipes.register();
         TinkerersStats.register();
         TinkerersItems.register();
         TinkerersEntities.register();
+        TinkerersS2CNetworking.register();
     }
 
     public static void setup() {
@@ -51,7 +50,6 @@ public final class TinkerersMod {
 
     @SuppressWarnings("SameParameterValue")
     private static <T extends ScreenHandler> RegistrySupplier<ScreenHandlerType<T>> registerScreenHandler(String id, ScreenHandlerType.Factory<T> factory) {
-        System.out.println("Registering screen handler");
         return register(RegistryKeys.SCREEN_HANDLER, Identifier.of(MOD_ID, id), () -> MenuRegistry.ofExtended((i, inventory, buf) -> factory.create(i, inventory)));
     }
 

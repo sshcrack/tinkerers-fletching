@@ -6,7 +6,9 @@
   "client": [
     "EntityRendererInvoker",
     "LivingEntityAccessor",
+    "client.ClientPlayNetworkHandlerMixin",
     "client.ClientRecipeBookMixin",
+    "client.ModelPredicateProviderRegistryInvoker",
     "client.WorldRendererMixin"
   ],
   "mixins": [
@@ -15,7 +17,6 @@
     "FletchingTableBlockMixin",
     "MixinDamageSource",
     "PersistentProjectileEntityAccessor",
-    "client.ModelPredicateProviderRegistryInvoker",
     "leash.EntityMixin",
     "leash.LeashDataMixin"
   ],

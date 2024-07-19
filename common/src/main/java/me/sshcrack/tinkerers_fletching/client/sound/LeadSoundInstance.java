@@ -29,7 +29,7 @@ public class LeadSoundInstance extends MovingSoundInstance {
     @Override
     public void tick() {
         this.tickCount++;
-        if (!this.player.isRemoved() && (this.tickCount <= 20 || arrow.getOwner() != player)) {
+        if (!this.player.isRemoved() && (this.tickCount <= 20 || arrow.getRopeAttachedTo() == player) && !arrow.isInGround()) {
             this.x = (float) this.player.getX();
             this.y = (float) this.player.getY();
             this.z = (float) this.player.getZ();

@@ -21,6 +21,9 @@
     "client": [
       "me.sshcrack.tinkerers_fletching.fabric.client.TinkerersModFabricClient"
     ],
+    "server": [
+      "me.sshcrack.tinkerers_fletching.fabric.server.TinkerersModFabricServer"
+    ],
     "jei_mod_plugin": [
       "me.sshcrack.tinkerers_fletching.client.TinkerersJeiPlugin"
     ]

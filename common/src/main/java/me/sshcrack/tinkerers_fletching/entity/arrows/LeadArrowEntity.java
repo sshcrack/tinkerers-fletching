@@ -4,28 +4,25 @@ import dev.architectury.networking.NetworkManager;
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.TinkerersItems;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
-import me.sshcrack.tinkerers_fletching.client.TinkerersModClient;
-import me.sshcrack.tinkerers_fletching.client.sound.LeadSoundInstance;
+import me.sshcrack.tinkerers_fletching.TinkerersStatuses;
 import me.sshcrack.tinkerers_fletching.duck.CustomBowVelocity;
 import me.sshcrack.tinkerers_fletching.duck.LeashDataDuck;
 import me.sshcrack.tinkerers_fletching.duck.SneakNotifierDuck;
 import me.sshcrack.tinkerers_fletching.mixin.PersistentProjectileEntityAccessor;
 import me.sshcrack.tinkerers_fletching.packet.DetachLeashC2SPacket;
 import me.sshcrack.tinkerers_fletching.packet.RequestLeashAttachmentC2SPacket;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Leashable;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.EntityStatusS2CPacket;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.world.World;
@@ -34,9 +31,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.UUID;
 
 public class LeadArrowEntity extends PersistentProjectileEntity implements SneakNotifierDuck.SneakListener, CustomBowVelocity {
-    public static double VELOCITY_MULTIPLIER = 0.25;
-
     private boolean requestedData = false;
+
+    /**
+     * If not null, the player to be notified
+     */
+    @Nullable
+    private ServerPlayerEntity notifyPlayer;
 
     @Nullable
     private LivingEntity attachedTo;
@@ -84,6 +85,13 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
     public void tick() {
         super.tick();
 
+        if(notifyPlayer != null) {
+            notifyPlayer.networkHandler.sendPacket(new EntityStatusS2CPacket(this, TinkerersStatuses.PLAY_SOUND));
+            notifyPlayer.networkHandler.sendPacket(new EntityStatusS2CPacket(this, TinkerersStatuses.SEND_ATTACHED_NOTICE));
+
+            notifyPlayer = null;
+        }
+
         if (!requestedData && getWorld().isClient) {
             NetworkManager.sendToServer(new RequestLeashAttachmentC2SPacket(getId()));
             requestedData = true;
@@ -94,34 +102,10 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
         if (living == null)
             return;
 
-
-        if (getWorld().isClient && age == 1) {
-            var client = MinecraftClient.getInstance();
-            if (living == client.player) {
-                if (living instanceof ClientPlayerEntity p)
-                    client.getSoundManager().play(new LeadSoundInstance(p, this));
-                var key = client.options.sneakKey;
-                if (!TinkerersModClient.DETACH_ROPE.isUnbound())
-                    key = TinkerersModClient.DETACH_ROPE;
-
-                Text text = Text.translatable("mount.onboard", key.getBoundKeyLocalizedText());
-
-                client.inGameHud.setOverlayMessage(text, false);
-                client.getNarratorManager().narrate(text);
-            }
-        }
-
         var horizontalDistance = getHorizontalDistanceSquared(living);
         applyLeashElasticity(living, this, Math.sqrt(horizontalDistance) + 5d);
         living.limitFallDistance();
         ((PersistentProjectileEntityAccessor) this).tinkerers$setLife(0);
-
-        if (age % 5 == 0 && !inGround && getWorld().isClient && living instanceof PlayerEntity p)
-            getWorld().playSound(
-                    p, p.getX(), p.getY(), p.getZ(),
-                    SoundEvents.ENTITY_LEASH_KNOT_PLACE, SoundCategory.BLOCKS,
-                    0.5F, 1.0F / (getWorld().getRandom().nextFloat() * 0.4F + 1.2F) + 0.5F
-            );
     }
 
     /**
@@ -179,13 +163,9 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
             return;
 
 
-        if (getWorld().isClient) {
-            var client = MinecraftClient.getInstance();
-            if (attachedEntity == client.player) {
-                if (attachedEntity instanceof ClientPlayerEntity p)
-                    client.getSoundManager().play(new LeadSoundInstance(p, this));
-            }
-        }
+        if (attachedEntity instanceof ServerPlayerEntity pEntity)
+            notifyPlayer = pEntity;
+
 
         var duck = (SneakNotifierDuck) attachedEntity;
         duck.tinkerers$addSneakListener(this);
@@ -257,5 +237,9 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
     @Override
     public float getBowVelocityMultiplier(Entity shooter, float pitch, float yaw, float roll, float speed, float divergence) {
         return 0.5f;
+    }
+
+    public boolean isInGround() {
+        return inGround;
     }
 }
