@@ -13,12 +13,15 @@
   ],
   "mixins": [
     "BowItemMixin",
+    "EntityMixin",
     "ExplosionMixin",
     "FletchingTableBlockMixin",
     "MixinDamageSource",
     "PersistentProjectileEntityAccessor",
     "leash.EntityMixin",
-    "leash.LeashDataMixin"
+    "leash.LeashDataMixin",
+    "trident.EntityTypePredicateMixin",
+    "trident.PointedDripstoneBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

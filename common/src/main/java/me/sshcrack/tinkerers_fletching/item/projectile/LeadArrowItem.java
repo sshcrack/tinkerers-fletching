@@ -55,6 +55,7 @@ public class LeadArrowItem extends ArrowItem implements FletchingItem {
     public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
         tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.1").formatted(Formatting.GRAY));
         tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.2").formatted(Formatting.GRAY));
+        tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.3").formatted(Formatting.GRAY));
         tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.elytra.1").formatted(Formatting.RED));
         tooltip.add(Text.translatable("item.tinkerers_fletching.lead_arrow.description.elytra.2").formatted(Formatting.RED));
     }

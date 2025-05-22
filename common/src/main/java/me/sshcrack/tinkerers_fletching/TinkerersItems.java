@@ -3,6 +3,7 @@ package me.sshcrack.tinkerers_fletching;
 import dev.architectury.registry.CreativeTabRegistry;
 import dev.architectury.registry.registries.RegistrySupplier;
 import me.sshcrack.tinkerers_fletching.item.BowOfAccelerationItem;
+import me.sshcrack.tinkerers_fletching.item.NetheriteTridentItem;
 import me.sshcrack.tinkerers_fletching.item.projectile.*;
 import me.sshcrack.tinkerers_fletching.item.projectile.tiered.*;
 import net.minecraft.item.Item;
@@ -32,6 +33,7 @@ public class TinkerersItems {
     public final static RegistrySupplier<TrackingArrowItem> TRACKING_ARROW = register("tracking_arrow", TrackingArrowItem::new);
 
     public final static RegistrySupplier<BowOfAccelerationItem> BOW_OF_ACCELERATION = register("bow_of_acceleration", BowOfAccelerationItem::new);
+    public final static RegistrySupplier<NetheriteTridentItem> NETHERITE_TRIDENT = register("netherite_trident", NetheriteTridentItem::new);
 
     private static <T extends Item> RegistrySupplier<T> register(String name, Supplier<T> item) {
         return TinkerersMod.register(RegistryKeys.ITEM, Identifier.of(TinkerersMod.MOD_ID, name), item);
@@ -40,6 +42,7 @@ public class TinkerersItems {
     @SuppressWarnings("UnstableApiUsage")
     public static void register() {
         CreativeTabRegistry.modifyBuiltin(Registries.ITEM_GROUP.getOrThrow(ItemGroups.COMBAT), (flags, output, canUseGameMasterBlocks) -> {
+            output.acceptAfter(Items.TRIDENT, NETHERITE_TRIDENT.get());
             output.acceptAfter(Items.SNOWBALL, BIG_SNOWBALL.get());
             output.acceptAfter(Items.SNOWBALL, HUGE_SNOWBALL.get());
             output.acceptAfter(Items.SNOWBALL, ICY_SNOWBALL.get());

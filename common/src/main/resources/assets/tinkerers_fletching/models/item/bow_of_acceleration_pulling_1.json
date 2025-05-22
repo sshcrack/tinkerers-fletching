@@ -1,6 +1,6 @@
 {
   "parent": "tinkerers_fletching:item/bow_of_acceleration",
   "textures": {
-    "layer0": "tinkerers_fletching:item/bow_of_acceleration_pulling_0"
+    "layer0": "tinkerers_fletching:item/bow_of_acceleration_pulling_1"
   }
 }

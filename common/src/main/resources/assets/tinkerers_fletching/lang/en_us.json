@@ -19,9 +19,10 @@
   "item.tinkerers_fletching.tnt_arrow": "TNT Arrow",
   "item.tinkerers_fletching.tracking_arrow": "Tracking Arrow",
   "item.tinkerers_fletching.lead_arrow": "Lead Arrow",
-  "item.tinkerers_fletching.bow_of_acceleration": "Bow Of Acceleration",
+  "item.tinkerers_fletching.bow_of_acceleration": "Bow of Acceleration",
   "item.tinkerers_fletching.lead_arrow.description.1": "A heavy arrow with a lead attached.",
-  "item.tinkerers_fletching.lead_arrow.description.2": "Can be used to climb up walls or to catapult yourself.",
+  "item.tinkerers_fletching.lead_arrow.description.2": "Can be used to climb up walls or to catapult yourself",
+  "item.tinkerers_fletching.lead_arrow.description.3": "(fall damage is dealt normally though).",
   "item.tinkerers_fletching.lead_arrow.description.elytra.1": "Be careful when using this arrow",
   "item.tinkerers_fletching.lead_arrow.description.elytra.2": "with an elytra though, it might not end well.",
 

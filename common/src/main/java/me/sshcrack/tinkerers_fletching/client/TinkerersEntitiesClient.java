@@ -3,8 +3,6 @@ package me.sshcrack.tinkerers_fletching.client;
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
 import me.sshcrack.tinkerers_fletching.client.registries.EntityRendererRegister;
 import me.sshcrack.tinkerers_fletching.client.renderer.*;
-import me.sshcrack.tinkerers_fletching.entity.arrows.TrackingArrowEntity;
-import net.minecraft.client.render.entity.ArrowEntityRenderer;
 import net.minecraft.client.render.entity.FlyingItemEntityRenderer;
 
 public class TinkerersEntitiesClient {
@@ -22,5 +20,7 @@ public class TinkerersEntitiesClient {
         EntityRendererRegister.register(TinkerersEntities.TNT_ARROW, TntArrowEntityRenderer::new);
         EntityRendererRegister.register(TinkerersEntities.TRACKING_ARROW, TrackingArrowEntityRenderer::new);
         EntityRendererRegister.register(TinkerersEntities.LEAD_ARROW, LeadArrowEntityRenderer::new);
+
+        EntityRendererRegister.register(TinkerersEntities.NETHERITE_TRIDENT, NetheriteTridentEntityRenderer::new);
     }
 }

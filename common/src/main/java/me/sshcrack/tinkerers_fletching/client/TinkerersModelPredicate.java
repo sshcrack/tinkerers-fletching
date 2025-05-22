@@ -8,10 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TinkerersModelPredicate {
-    private static List<Item> registerQueue = new ArrayList<>();
+    private static final List<Item> registerBowQueue = new ArrayList<>();
+    private static final List<Item> registerTridentQueue = new ArrayList<>();
 
     public static void register() {
-        for (Item item : registerQueue) {
+        for (Item item : registerBowQueue) {
             ModelPredicateProviderRegistryInvoker.register(
                     item,
                     Identifier.ofVanilla("pulling"),
@@ -26,9 +27,20 @@ public class TinkerersModelPredicate {
                 }
             });
         }
+
+        for (Item item : registerTridentQueue) {
+            ModelPredicateProviderRegistryInvoker.register(
+                    item,
+                    Identifier.ofVanilla("throwing"),
+                    (stack, world, entity, seed) -> entity != null && entity.isUsingItem() && entity.getActiveItem() == stack ? 1.0F : 0.0F
+            );
+        }
     }
 
     public static void registerBow(Item item) {
-        registerQueue.add(item);
+        registerBowQueue.add(item);
+    }
+    public static void registerTrident(Item item) {
+        registerTridentQueue.add(item);
     }
 }

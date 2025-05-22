@@ -102,6 +102,7 @@ public abstract class EntityMixin implements SneakNotifierDuck {
         if (tinkerers$sneakListeners == null)
             return;
 
+        System.out.println("Notifying listeners");
         var entity = Entity.class.cast(this);
         for (var listener : tinkerers$sneakListeners) {
             var res = listener.onSneakChange(entity, isSneaking);

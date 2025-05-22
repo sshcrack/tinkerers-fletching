@@ -6,6 +6,7 @@ import me.sshcrack.tinkerers_fletching.TinkerersItems;
 import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import me.sshcrack.tinkerers_fletching.TinkerersStatuses;
 import me.sshcrack.tinkerers_fletching.duck.CustomBowVelocity;
+import me.sshcrack.tinkerers_fletching.duck.EntityFallDamageReducerDuck;
 import me.sshcrack.tinkerers_fletching.duck.LeashDataDuck;
 import me.sshcrack.tinkerers_fletching.duck.SneakNotifierDuck;
 import me.sshcrack.tinkerers_fletching.mixin.PersistentProjectileEntityAccessor;
@@ -15,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.Leashable;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.projectile.PersistentProjectileEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -32,6 +34,7 @@ import java.util.UUID;
 
 public class LeadArrowEntity extends PersistentProjectileEntity implements SneakNotifierDuck.SneakListener, CustomBowVelocity {
     private boolean requestedData = false;
+    public static float FALL_DAMAGE_MULTIPLIER = 0.5f;
 
     /**
      * If not null, the player to be notified
@@ -78,6 +81,8 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
 
             //TODO this doesn't work
             data.tinkerers$setNoLeadDrop(true);
+
+            this.discard();
         }
     }
 
@@ -102,9 +107,13 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
         if (living == null)
             return;
 
+        if(living.isDead() || living.isRemoved() || (living instanceof PlayerEntity p && p.isSpectator())) {
+            this.discard();
+            return;
+        }
+
         var horizontalDistance = getHorizontalDistanceSquared(living);
         applyLeashElasticity(living, this, Math.sqrt(horizontalDistance) + 5d);
-        living.limitFallDistance();
         ((PersistentProjectileEntityAccessor) this).tinkerers$setLife(0);
     }
 
@@ -156,6 +165,7 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
         var duck = (SneakNotifierDuck) attachedEntity;
 
         duck.tinkerrers$removeSneakListener(this);
+        ((EntityFallDamageReducerDuck) attachedEntity).tinkerers$setFallDamageMultiplier(1f);
     }
 
     private void registerAttachment(@Nullable Entity attachedEntity) {
@@ -169,6 +179,7 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
 
         var duck = (SneakNotifierDuck) attachedEntity;
         duck.tinkerers$addSneakListener(this);
+        ((EntityFallDamageReducerDuck) attachedEntity).tinkerers$setFallDamageMultiplier(FALL_DAMAGE_MULTIPLIER);
     }
 
     @Override
@@ -241,5 +252,10 @@ public class LeadArrowEntity extends PersistentProjectileEntity implements Sneak
 
     public boolean isInGround() {
         return inGround;
+    }
+
+    @Override
+    protected boolean canHit(Entity entity) {
+        return super.canHit(entity) && entity != getRopeAttachedTo();
     }
 }

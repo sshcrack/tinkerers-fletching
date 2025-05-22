@@ -9,6 +9,8 @@ import me.sshcrack.tinkerers_fletching.entity.arrows.TrackingArrowEntity;
 import me.sshcrack.tinkerers_fletching.registries.EntityTypeRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
+import net.minecraft.entity.SpawnGroup;
+import net.minecraft.entity.projectile.TridentEntity;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -30,6 +32,15 @@ public class TinkerersEntities {
     public static final Supplier<EntityType<TntArrowEntity>> TNT_ARROW = register("tnt_arrow", TntArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
     public static final Supplier<EntityType<TrackingArrowEntity>> TRACKING_ARROW = register("tracking_arrow", TrackingArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
     public static final Supplier<EntityType<LeadArrowEntity>> LEAD_ARROW = register("lead_arrow", LeadArrowEntity::new, b -> b.dimensions(0.5F, 0.5F).eyeHeight(0.13F).maxTrackingRange(4).trackingTickInterval(20));
+
+    public static final Supplier<EntityType<NetheriteTridentEntity>> NETHERITE_TRIDENT = register(
+            "netherite_trident",
+            NetheriteTridentEntity::new, b -> b
+                    .dimensions(0.5F, 0.5F)
+                    .eyeHeight(0.13F)
+                    .maxTrackingRange(4)
+                    .trackingTickInterval(20)
+    );
 
 
     private static <T extends Entity> Supplier<EntityType<T>> register(String name, EntityType.EntityFactory<T> factory, Consumer<EntityType.Builder<T>> configureBuilder) {

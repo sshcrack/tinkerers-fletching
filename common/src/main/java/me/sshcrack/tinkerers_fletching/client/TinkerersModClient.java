@@ -15,6 +15,7 @@ import net.minecraft.client.util.InputUtil;
 
 @Environment(EnvType.CLIENT)
 public class TinkerersModClient {
+    private static boolean prevDetaching = false;
     public static final KeyBinding DETACH_ROPE = new KeyBinding(
             "key.tinkerers_fletching.detach_rope",
             InputUtil.Type.KEYSYM,
@@ -40,10 +41,16 @@ public class TinkerersModClient {
                 detachPressed = true;
             }
 
-            if ((DETACH_ROPE.isUnbound() ? player.input.sneaking : detachPressed)) {
+            var isPressed = DETACH_ROPE.isUnbound() ? player.input.sneaking : detachPressed;
+            if (isPressed && !prevDetaching) {
                 if (duck != null)
                     duck.tinkerers$notifyListeners(true);
+
+                prevDetaching = true;
             }
+
+            if(!isPressed)
+                prevDetaching = false;
         });
 
         TinkerersModelPredicate.register();
