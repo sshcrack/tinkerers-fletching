@@ -16,17 +16,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EntityMixin implements EntityFallDamageReducerDuck {
     @Shadow public float fallDistance;
     @Unique
-    private float fallDamageMultiplier = 1.0F;
+    private float tinkerers_fletching$fallDamageMultiplier = 1.0F;
 
     @Override
     public void tinkerers$setFallDamageMultiplier(float multiplier) {
-        this.fallDamageMultiplier = multiplier;
+        this.tinkerers_fletching$fallDamageMultiplier = multiplier;
     }
 
     @Inject(method="fall", at= @At("HEAD"))
     private void tinkerers$applyFallDamageMultiplier(double heightDifference, boolean onGround, BlockState state, BlockPos landedPosition, CallbackInfo ci) {
         if(this.fallDistance > 0.0F && onGround) {
-            this.fallDistance *= fallDamageMultiplier;
+            this.fallDistance *= tinkerers_fletching$fallDamageMultiplier;
         }
     }
 }

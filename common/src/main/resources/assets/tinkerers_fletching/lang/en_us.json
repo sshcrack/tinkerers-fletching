@@ -36,6 +36,8 @@
   "entity.tinkerers_fletching.tracking_arrow": "Tracking Arrow",
   "entity.tinkerers_fletching.lead_arrow": "Lead Arrow",
 
+  "item.tinkerers_fletching.netherite_trident": "Netherite Trident",
+
   "gui.tinkerers_fletching.category.brewing": "Fletching",
 
   "key.tinkerers_fletching.detach_rope": "Detach Rope",

@@ -9,6 +9,10 @@ import net.minecraft.entity.LivingEntity;
 
 @Environment(EnvType.CLIENT)
 public class TinkerersC2SNetworking {
+    private TinkerersC2SNetworking() {
+        /* This utility class should not be instantiated */
+    }
+
 
     private static void onSetAttachedToPacket(SetAttachedToS2CPacket packet, NetworkManager.PacketContext packetContext) {
         var player = packetContext.getPlayer();

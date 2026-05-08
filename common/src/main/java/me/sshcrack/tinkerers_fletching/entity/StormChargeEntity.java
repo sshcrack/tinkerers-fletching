@@ -1,7 +1,6 @@
 package me.sshcrack.tinkerers_fletching.entity;
 
 import me.sshcrack.tinkerers_fletching.TinkerersEntities;
-import me.sshcrack.tinkerers_fletching.TinkerersMod;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.damage.DamageSource;
@@ -13,17 +12,16 @@ import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.FluidTags;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.hit.EntityHitResult;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.*;
+import net.minecraft.util.math.Box;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.AdvancedExplosionBehavior;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -51,7 +49,7 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
     protected Box calculateBoundingBox() {
         float f = this.getType().getDimensions().width() / 2.0f;
         float g = this.getType().getDimensions().height();
-        return new Box(this.getPos().x - (double) f, this.getPos().y - (double) 0.15f, this.getPos().z - (double) f, this.getPos().x + (double) f, this.getPos().y - (double) 0.15f + (double) g, this.getPos().z + (double) f);
+        return new Box(this.getPos().x - f, this.getPos().y - 0.15f, this.getPos().z - f, this.getPos().x + f, this.getPos().y - 0.15f + g, this.getPos().z + f);
     }
 
 
@@ -64,6 +62,11 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
     }
 
     @Override
+    public Vec3d adjustMovementForCollisions(Vec3d movement) {
+
+    }
+
+        @Override
     protected boolean canHit(Entity entity) {
         if (entity instanceof StormChargeEntity) {
             return false;
@@ -138,7 +141,7 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
 
     private void applyWaterMovement() {
         Vec3d vec3d = this.getVelocity();
-        this.setVelocity(vec3d.x * (double) 0.99f, Math.min(vec3d.y + (double) 5.0E-4f, (double) 0.06f), vec3d.z * (double) 0.99f);
+        this.setVelocity(vec3d.x * 0.99f, Math.min(vec3d.y + 5.0E-4f, 0.06f), vec3d.z * 0.99f);
     }
 
     @Override
@@ -146,6 +149,7 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
         return false;
     }
 
+    @Override
     public boolean deflect(ProjectileDeflection deflection, @Nullable Entity deflector, @Nullable Entity owner, boolean fromAttack) {
         return false;
     }
@@ -155,6 +159,7 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
         this.getWorld().createExplosion(this, null, EXPLOSION_BEHAVIOR, pos.getX(), pos.getY(), pos.getZ(), EXPLOSION_POWER, false, World.ExplosionSourceType.TRIGGER, ParticleTypes.GUST_EMITTER_SMALL, ParticleTypes.GUST_EMITTER_LARGE, SoundEvents.ENTITY_WIND_CHARGE_WIND_BURST);
     }
 
+    @Override
     public void setVelocity(Entity shooter, float pitch, float yaw, float roll, float speed, float divergence) {
         float vX = -MathHelper.sin(yaw * 0.017453292F) * MathHelper.cos(pitch * 0.017453292F);
         float vY = -MathHelper.sin((pitch + roll) * 0.017453292F);

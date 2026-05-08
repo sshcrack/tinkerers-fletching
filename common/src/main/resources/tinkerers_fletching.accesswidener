@@ -4,3 +4,5 @@ accessible class net/minecraft/client/gui/hud/InGameHud$HeartType
 
 accessible class net/minecraft/recipe/Ingredient$StackEntry
 accessible class net/minecraft/recipe/Ingredient$TagEntry
+
+extendable method net/minecraft/entity/Entity adjustMovementForCollisions (Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;
