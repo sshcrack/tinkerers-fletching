@@ -6,3 +6,6 @@ accessible class net/minecraft/recipe/Ingredient$StackEntry
 accessible class net/minecraft/recipe/Ingredient$TagEntry
 
 extendable method net/minecraft/entity/Entity adjustMovementForCollisions (Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;
+accessible method net/minecraft/entity/Entity findCollisionsForMovement (Lnet/minecraft/entity/Entity;Lnet/minecraft/world/World;Ljava/util/List;Lnet/minecraft/util/math/Box;)Ljava/util/List;
+accessible method net/minecraft/entity/Entity collectStepHeights (Lnet/minecraft/util/math/Box;Ljava/util/List;FF)[F
+accessible method net/minecraft/entity/Entity adjustMovementForCollisions (Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d;

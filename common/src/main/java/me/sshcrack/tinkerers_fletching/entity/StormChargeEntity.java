@@ -17,11 +17,13 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.AdvancedExplosionBehavior;
 import net.minecraft.world.explosion.ExplosionBehavior;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -62,8 +64,39 @@ public class StormChargeEntity extends ExplosiveProjectileEntity {
     }
 
     @Override
-    public Vec3d adjustMovementForCollisions(Vec3d movement) {
+    protected Vec3d adjustMovementForCollisions(Vec3d movement) {
+        Box box = this.getBoundingBox();
+        List<VoxelShape> list = this.getWorld().getEntityCollisions(this, box.stretch(movement));
+        Vec3d vec3d = movement.lengthSquared() == 0.0 ? movement : adjustMovementForCollisions(this, movement, box, this.getWorld(), List.of());
+        boolean bl = movement.x != vec3d.x;
+        boolean bl2 = movement.y != vec3d.y;
+        boolean bl3 = movement.z != vec3d.z;
+        boolean bl4 = bl2 && movement.y < 0.0;
+        if (this.getStepHeight() > 0.0F && (bl4 || this.isOnGround()) && (bl || bl3)) {
+            Box box2 = bl4 ? box.offset(0.0, vec3d.y, 0.0) : box;
+            Box box3 = box2.stretch(movement.x, (double)this.getStepHeight(), movement.z);
+            if (!bl4) {
+                box3 = box3.stretch(0.0, -1.0E-5F, 0.0);
+            }
 
+            List<VoxelShape> list2 = findCollisionsForMovement(this, this.getWorld(), list, box3)
+                    .stream()
+                    .filter(e -> e == VoxelShapes.fullCube() || VoxelShapes.unionCoversFullCube(e,e) )
+                    .toList();
+
+            float f = (float)vec3d.y;
+            float[] fs = collectStepHeights(box2, list2, this.getStepHeight(), f);
+
+            for (float g : fs) {
+                Vec3d vec3d2 = adjustMovementForCollisions(new Vec3d(movement.x, (double)g, movement.z), box2, list2);
+                if (vec3d2.horizontalLengthSquared() > vec3d.horizontalLengthSquared()) {
+                    double d = box.minY - box2.minY;
+                    return vec3d2.add(0.0, -d, 0.0);
+                }
+            }
+        }
+
+        return vec3d;
     }
 
         @Override
